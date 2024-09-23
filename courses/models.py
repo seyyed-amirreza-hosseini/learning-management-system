@@ -12,7 +12,7 @@ class Course(models.Model):
 
     name = models.CharField(max_length=255)
     description = models.TextField()
-    category = models.CharField()
+    category = models.CharField(max_length=255)
     level = models.CharField(max_length=2, choices=Level, default=Level.BEGINNER)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -78,7 +78,7 @@ class Enrollment(models.Model):
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
     enrollment_date = models.DateField(auto_now_add=True)
     progress = models.FloatField(default=0.0)
-    status = models.CharField()
+    status = models.CharField(max_length=10, choices=Status, default=Status.ACTIVE)
     grade = models.DecimalField(max_digits=4, decimal_places=2)
     feedback = models.TextField(blank=True)
     completion_date = models.DateField(null=True, blank=True)
