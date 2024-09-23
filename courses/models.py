@@ -39,15 +39,15 @@ class Module(models.Model):
 
 class Lesson(models.Model):
     class ContentType(models.TextChoices):
-        VIDEO = 'video', 'Video'
-        ARTICLE = 'article', 'Article/Text'
-        QUIZ = 'quiz', 'Quiz'
-        ASSIGNMENT = 'assignment', 'Assignment'
-        PRESENTATION = 'presentation', 'Presentation'
-        IMAGE = 'image', 'Image'
-        AUDIO = 'audio', 'Audio'
-        LIVE_SESSION = 'live_session', 'Live Session'
-        PDF = 'pdf', 'PDF'
+        VIDEO = 'video', _('Video')
+        ARTICLE = 'article', _('Article/Text')
+        QUIZ = 'quiz', _('Quiz')
+        ASSIGNMENT = 'assignment', _('Assignment')
+        PRESENTATION = 'presentation', _('Presentation')
+        IMAGE = 'image', _('Image')
+        AUDIO = 'audio', _('Audio')
+        LIVE_SESSION = 'live_session', _('Live Session')
+        PDF = 'pdf', _('PDF')
 
     name = models.CharField(max_length=255)
     content_type = models.CharField(max_length=20, choices=ContentType)
@@ -67,3 +67,18 @@ class Assignment(models.Model):
     due_date = models.DateTimeField()
     max_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxLengthValidator(20)])
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='assignments')
+
+
+class Enrollment(models.Model):
+    class Status(models.TextChoices):
+        ACTIVE = 'active', _('Active')
+        COMPLETED = 'completed', _('Completed')
+        DROPPED = 'dropped', _('Dropped')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
+    enrollment_date = models.DateTimeField(auto_now_add=True)
+    progress = models.FloatField(default=0.0)
+    status = models.CharField()
+    grade = models.DecimalField(max_digits=4, decimal_places=2)
+    feedback = models.TextField(blank=True)
+    completion_date = models.DateField(null=True, blank=True)
