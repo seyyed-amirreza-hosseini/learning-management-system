@@ -87,3 +87,17 @@ class Enrollment(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['course', 'student'], name='unique_course_student')
         ]
+
+
+class Submission(models.Model):
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='submissions')
+    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submissions')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    feedback = models.TextField(blank=True)
+    file = models.FileField(upload_to='submissions/', null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['assignment', 'student'], name='unique_assignment_student')
+        ]
