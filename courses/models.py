@@ -76,9 +76,14 @@ class Enrollment(models.Model):
         DROPPED = 'dropped', _('Dropped')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
     student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
-    enrollment_date = models.DateTimeField(auto_now_add=True)
+    enrollment_date = models.DateField(auto_now_add=True)
     progress = models.FloatField(default=0.0)
     status = models.CharField()
     grade = models.DecimalField(max_digits=4, decimal_places=2)
     feedback = models.TextField(blank=True)
     completion_date = models.DateField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['course', 'student'], name='unique_course_student')
+        ]
