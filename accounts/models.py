@@ -14,6 +14,9 @@ class User(AbstractUser, PermissionsMixin):
         ADMIN = 'AD', _('Admin')
     role = models.CharField(max_length=2, choices=Role, default=Role.STUDENT)
 
+    def __str__(self):
+        return f'{self.email}'
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
