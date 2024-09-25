@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxLengthValidator
 
 
 class Student(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     major = models.CharField(max_length=100, blank=True)
     
     @property
@@ -17,7 +17,7 @@ class Student(models.Model):
 
 
 class Teacher(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     department = models.CharField(max_length=255, blank=True)
 
     @property
@@ -41,7 +41,7 @@ class Course(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    instructors = models.ManyToManyField(settings.AUTH_USER_MODEL, through='InstructorCourse')
+    instructors = models.ManyToManyField(Teacher, through='InstructorCourse')
 
     def __str__(self):
         return self.name
@@ -55,7 +55,7 @@ class InstructorCourse(models.Model):
         COORDINATOR = 'CO', _('Coordinator')
 
     course = models.ForeignKey(Course, on_delete=models.CASCADE) 
-    instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    instructor = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     assigned_date = models.DateField()
     role = models.CharField(max_length=15, choices=Role)
 
