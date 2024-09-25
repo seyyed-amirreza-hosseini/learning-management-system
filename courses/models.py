@@ -22,10 +22,15 @@ class Course(models.Model):
 
 # Intermediate Table
 class InstructorCourse(models.Model):
+    class Role(models.TextChoices):
+        TEACHER = 'TE', _('Teacher')
+        ASSISTANT = "AS", _('Assistant')
+        COORDINATOR = 'CO', _('Coordinator')
+
     course = models.ForeignKey(Course, on_delete=models.CASCADE) 
     instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     assigned_date = models.DateField()
-    role = models.CharField(max_length=100)
+    role = models.CharField(max_length=15, choices=Role)
 
 
 class Module(models.Model):
