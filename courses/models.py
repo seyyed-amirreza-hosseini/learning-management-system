@@ -4,6 +4,30 @@ from django.conf import settings
 from django.core.validators import MinValueValidator, MaxLengthValidator
 
 
+class Student(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
+    major = models.CharField(max_length=100, blank=True)
+    
+    @property
+    def enrollment_date(self):
+        return self.user.date_joined
+    
+    def __str__(self):
+        return f'Student: {self.user.first_name} {self.user.last_name}'
+
+
+class Teacher(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
+    department = models.CharField(max_length=255, blank=True)
+
+    @property
+    def hire_date(self):
+        return self.user.date_joined
+
+    def __str__(self):
+        return f'Teacher: {self.user.first_name} {self.user.last_name}'
+
+
 class Course(models.Model):
     class Level(models.TextChoices):
         BEGINNER = 'BE', _('Beginner')
@@ -18,6 +42,9 @@ class Course(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     instructors = models.ManyToManyField(settings.AUTH_USER_MODEL, through='InstructorCourse')
+
+    def __str__(self):
+        return self.name
 
 
 # Intermediate Table
@@ -40,6 +67,9 @@ class Module(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Lesson(models.Model):
@@ -65,6 +95,9 @@ class Lesson(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     resources = models.FileField(upload_to='lesson_resources', null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Assignment(models.Model):
     name = models.CharField(max_length=255)
@@ -72,6 +105,9 @@ class Assignment(models.Model):
     due_date = models.DateTimeField()
     max_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxLengthValidator(20)])
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='assignments')
+
+    def __str__(self):
+        return self.name
 
 
 class Enrollment(models.Model):
