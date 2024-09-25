@@ -15,3 +15,8 @@ class CourseAdmin(admin.ModelAdmin):
 class ModuleAdmin(admin.ModelAdmin):
     list_display = ['name', 'course', 'order', 'updated_at']
     list_filter = ['course', 'order', 'updated_at']
+
+
+@admin.register(InstructorCourse)
+class InstructorCourseAdmin(admin.ModelAdmin):
+    list_display = ['course', 'instructor', 'assigned_date', 'role']
