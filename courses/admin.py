@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.db.models.aggregates import Count
+from django.utils.html import format_html, urlencode
+from django.urls import reverse
 from .models import Student, Teacher, Course, Module, Lesson, Enrollment, Assignment, Submission, InstructorCourse
 
 
@@ -13,8 +15,15 @@ class CourseAdmin(admin.ModelAdmin):
     def get_instructors(self, obj):
         return ", ".join([str(ins) for ins in obj.instructors.all()])
     
+    @admin.display(ordering='modules_count')
     def modules_count(self, course):
-        return course.modules_count
+        url = (
+            reverse('admin:courses_module_changelist')
+            + "?"
+            + urlencode({
+                'course__id': str(course.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, course.modules_count)
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
