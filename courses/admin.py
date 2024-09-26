@@ -9,7 +9,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_editable = ['price']
 
     def get_instructors(self, obj):
-        return "\n".join([ins.username for ins in obj.instructors.all()])
+        return "\n".join([ins.user.first_name + " " + ins.user.last_name for ins in obj.instructors.all()])
 
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
