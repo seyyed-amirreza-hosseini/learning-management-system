@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.db.models.aggregates import Count
+from django.db.models.query import QuerySet
+from django.http import HttpRequest
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from .models import Student, Teacher, Course, Module, Lesson, Enrollment, Assignment, Submission, InstructorCourse
@@ -35,6 +37,9 @@ class ModuleAdmin(admin.ModelAdmin):
     list_display = ['name', 'course', 'order', 'updated_at']
     list_filter = ['course', 'order', 'updated_at']
 
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.order_by('order')
 
 @admin.register(InstructorCourse)
 class InstructorCourseAdmin(admin.ModelAdmin):
