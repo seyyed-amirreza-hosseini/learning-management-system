@@ -13,6 +13,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ['category', 'level', 'price', 'updated_at']
     list_editable = ['price']
     list_per_page = 10
+    search_fields = ['name__istartswith']
 
     @admin.display(description='Instructors')
     def get_instructors(self, obj):
@@ -38,6 +39,7 @@ class ModuleAdmin(admin.ModelAdmin):
     list_display = ['name', 'course', 'order', 'updated_at', 'lessons_count']
     list_filter = ['course', 'order', 'updated_at']
     list_per_page = 10
+    search_fields = ['name__istartswith']
 
     @admin.display(ordering='lessons_count')
     def lessons_count(self, module):
@@ -76,7 +78,7 @@ class TeacherAdmin(admin.ModelAdmin):
 class LessonAdmin(admin.ModelAdmin):
     list_display = ['name', 'content_type', 'duration', 'module']
     list_per_page = 10
-
+    search_fields = ['name__istartswith']
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
