@@ -12,6 +12,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'level', 'price', 'get_instructors', 'updated_at', 'modules_count']
     list_filter = ['category', 'level', 'price', 'updated_at']
     list_editable = ['price']
+    list_per_page = 10
 
     @admin.display(description='Instructors')
     def get_instructors(self, obj):
@@ -36,6 +37,7 @@ class CourseAdmin(admin.ModelAdmin):
 class ModuleAdmin(admin.ModelAdmin):
     list_display = ['name', 'course', 'order', 'updated_at', 'lessons_count']
     list_filter = ['course', 'order', 'updated_at']
+    list_per_page = 10
 
     @admin.display(ordering='lessons_count')
     def lessons_count(self, module):
@@ -51,36 +53,44 @@ class ModuleAdmin(admin.ModelAdmin):
         queryset = super().get_queryset(request)
         return queryset.order_by('order').annotate(lessons_count=Count('lessons'))
 
+
 @admin.register(InstructorCourse)
 class InstructorCourseAdmin(admin.ModelAdmin):
     list_display = ['course', 'instructor', 'assigned_date', 'role']
+    list_per_page = 10
 
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     list_display = ['user', 'major', 'enrollment_date']
+    list_per_page = 10
 
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ['user', 'department', 'hire_date']
+    list_per_page = 10
 
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
     list_display = ['name', 'content_type', 'duration', 'module']
+    list_per_page = 10
 
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
     list_display = ['course', 'student', 'enrollment_date']
+    list_per_page = 10
 
 
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = ['name', 'description', 'due_date', 'module']
+    list_per_page = 10
 
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ['assignment', 'student', 'submitted_at']
+    list_per_page = 10
