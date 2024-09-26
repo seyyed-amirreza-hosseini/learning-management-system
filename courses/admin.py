@@ -1,23 +1,25 @@
 from django.contrib import admin
-from django.db.models.query import QuerySet
-from django.http import HttpRequest
+from django.db.models.aggregates import Count
 from .models import Student, Teacher, Course, Module, Lesson, Enrollment, Assignment, Submission, InstructorCourse
 
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    
-    def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-        return queryset.prefetch_related('instructors__user')
-
-    list_display = ['name', 'category', 'level', 'price', 'get_instructors', 'updated_at']
+    list_display = ['name', 'category', 'level', 'price', 'get_instructors', 'updated_at', 'modules_count']
     list_filter = ['category', 'level', 'price', 'updated_at']
     list_editable = ['price']
 
     @admin.display(description='Instructors')
     def get_instructors(self, obj):
         return ", ".join([str(ins) for ins in obj.instructors.all()])
+    
+    def modules_count(self, course):
+        return course.modules_count
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.prefetch_related('instructors__user').annotate(modules_count=Count('modules'))
+
 
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
