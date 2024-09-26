@@ -34,12 +34,22 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Module)
 class ModuleAdmin(admin.ModelAdmin):
-    list_display = ['name', 'course', 'order', 'updated_at']
+    list_display = ['name', 'course', 'order', 'updated_at', 'lessons_count']
     list_filter = ['course', 'order', 'updated_at']
+
+    @admin.display(ordering='lessons_count')
+    def lessons_count(self, module):
+        url = (
+            reverse('admin:courses_lesson_changelist')
+            + "?"
+            + urlencode({
+                'module__id': str(module.id)
+            }))
+        return format_html('<a href="{}">{}</a>', url, module.lessons_count)
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-        return queryset.order_by('order')
+        return queryset.order_by('order').annotate(lessons_count=Count('lessons'))
 
 @admin.register(InstructorCourse)
 class InstructorCourseAdmin(admin.ModelAdmin):
