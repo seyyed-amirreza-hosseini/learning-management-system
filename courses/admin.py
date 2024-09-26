@@ -40,6 +40,7 @@ class ModuleAdmin(admin.ModelAdmin):
     list_filter = ['course', 'order', 'updated_at']
     list_per_page = 10
     search_fields = ['name__istartswith']
+    autocomplete_fields = ['course']
 
     @admin.display(ordering='lessons_count')
     def lessons_count(self, module):
@@ -60,6 +61,7 @@ class ModuleAdmin(admin.ModelAdmin):
 class InstructorCourseAdmin(admin.ModelAdmin):
     list_display = ['course', 'instructor', 'assigned_date', 'role']
     list_per_page = 10
+    autocomplete_fields = ['course', 'instructor']
 
 
 @admin.register(Student)
@@ -67,6 +69,7 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'major', 'enrollment_date']
     list_per_page = 10
     search_fields = ['user__first_name__istartswith', 'user__last_name__istartswith']
+    autocomplete_fields = ['user']
 
     def full_name(self, student):
         return f'{student.user.first_name} {student.user.last_name}'
@@ -77,6 +80,7 @@ class TeacherAdmin(admin.ModelAdmin):
     list_display = ['full_name', 'department', 'hire_date']
     list_per_page = 10
     search_fields = ['user__first_name__istartswith', 'user__last_name__istartswith']
+    autocomplete_fields = ['user']
 
     def full_name(self, teacher):
         return f'{teacher.user.first_name} {teacher.user.last_name}'
@@ -87,20 +91,26 @@ class LessonAdmin(admin.ModelAdmin):
     list_display = ['name', 'content_type', 'duration', 'module']
     list_per_page = 10
     search_fields = ['name__istartswith']
+    autocomplete_fields = ['module']
+
 
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
     list_display = ['course', 'student', 'enrollment_date']
     list_per_page = 10
+    autocomplete_fields = ['course', 'student']
 
 
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = ['name', 'description', 'due_date', 'module']
     list_per_page = 10
+    search_fields = ['name']
+    autocomplete_fields = ['module']
 
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
     list_display = ['assignment', 'student', 'submitted_at']
     list_per_page = 10
+    autocomplete_fields = ['assignment', 'student']
