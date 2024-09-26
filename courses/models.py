@@ -116,7 +116,7 @@ class Enrollment(models.Model):
         COMPLETED = 'completed', _('Completed')
         DROPPED = 'dropped', _('Dropped')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='enrollments')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrollments')
     enrollment_date = models.DateField(auto_now_add=True)
     progress = models.FloatField(default=0.0)
     status = models.CharField(max_length=10, choices=Status, default=Status.ACTIVE)
@@ -132,7 +132,7 @@ class Enrollment(models.Model):
 
 class Submission(models.Model):
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='submissions')
-    student = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='submissions')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='submissions')
     submitted_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     feedback = models.TextField(blank=True)
