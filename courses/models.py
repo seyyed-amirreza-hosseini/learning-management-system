@@ -13,7 +13,7 @@ class Student(models.Model):
         return self.user.date_joined
     
     def __str__(self):
-        return f'Student: {self.user.first_name} {self.user.last_name}'
+        return f'{self.user.first_name} {self.user.last_name}'
 
 
 class Teacher(models.Model):
@@ -25,7 +25,7 @@ class Teacher(models.Model):
         return self.user.date_joined
 
     def __str__(self):
-        return f'Teacher: {self.user.first_name} {self.user.last_name}'
+        return f'{self.user.first_name} {self.user.last_name}'
 
 
 class Course(models.Model):
