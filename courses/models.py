@@ -107,7 +107,7 @@ class Assignment(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='assignments')
 
     def __str__(self):
-        return self.name
+        return f'{self.name}: {self.module.name}'
 
 
 class Enrollment(models.Model):
