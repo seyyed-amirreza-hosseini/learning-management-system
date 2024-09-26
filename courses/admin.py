@@ -64,14 +64,22 @@ class InstructorCourseAdmin(admin.ModelAdmin):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ['user', 'major', 'enrollment_date']
+    list_display = ['full_name', 'major', 'enrollment_date']
     list_per_page = 10
+    search_fields = ['user__first_name__istartswith', 'user__last_name__istartswith']
+
+    def full_name(self, student):
+        return f'{student.user.first_name} {student.user.last_name}'
 
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ['user', 'department', 'hire_date']
+    list_display = ['full_name', 'department', 'hire_date']
     list_per_page = 10
+    search_fields = ['user__first_name__istartswith', 'user__last_name__istartswith']
+
+    def full_name(self, teacher):
+        return f'{teacher.user.first_name} {teacher.user.last_name}'
 
 
 @admin.register(Lesson)
