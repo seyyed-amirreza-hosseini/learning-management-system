@@ -8,6 +8,7 @@ django = "*"
 psycopg2 = "*"
 django-debug-toolbar = "*"
 djangorestframework = "*"
+drf-nested-routers = "*"
 
 [dev-packages]
 
