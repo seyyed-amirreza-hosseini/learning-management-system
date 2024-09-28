@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Course, Teacher
+from .models import Course, Teacher, Module
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -15,7 +15,18 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
     instructors = TeacherSerializer(many=True, read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'category', 'level', 'price', 'instructors']
+        fields = ['id', 'name', 'description', 'category', 'level', 'price', 'instructors', 'updated_at']
+
+
+class ModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = ['id', 'name', 'description', 'order', 'updated_at']
+
+    def create(self, validated_data):
+        course_id = self.context['course_id']
+        return Module.objects.create(course_id=course_id, **validated_data)    
