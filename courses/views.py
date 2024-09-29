@@ -16,6 +16,7 @@ class CourseViewSet(ModelViewSet):
 
 class ModuleViewSet(ModelViewSet):
     serializer_class = ModuleSerializer
+    permission_classes = [IsAdminOrTeacher]
 
     def get_queryset(self):
         return Module.objects.filter(course=self.kwargs['course_pk']).order_by('order')
@@ -26,6 +27,7 @@ class ModuleViewSet(ModelViewSet):
 
 class LessonViewSet(ModelViewSet):
     serializer_class = LessonSerializer
+    permission_classes = [IsAdminOrTeacher]
 
     def get_queryset(self):
         return Lesson.objects.filter(module=self.kwargs['module_pk']).order_by('order')
