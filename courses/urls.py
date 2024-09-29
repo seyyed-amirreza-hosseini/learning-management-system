@@ -5,6 +5,7 @@ from . import views
 router = routers.DefaultRouter()
 
 router.register('courses', views.CourseViewSet, basename='course')
+router.register('teachers', views.TeacherViewSet, basename='teacher')
 
 courses_router = routers.NestedDefaultRouter(router, 'courses', lookup='course')
 courses_router.register('modules', views.ModuleViewSet, basename='course-moduels')

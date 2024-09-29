@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
-from .models import Course, Module, Lesson
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer
+from .models import Course, Module, Lesson, Teacher
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer
 from .permissions import IsAdminOrTeacher
 
 
@@ -34,3 +34,9 @@ class LessonViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'module_id': self.kwargs['module_pk']}
+    
+
+
+class TeacherViewSet(ModelViewSet):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
