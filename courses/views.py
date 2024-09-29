@@ -11,7 +11,7 @@ class CourseViewSet(ModelViewSet):
     permission_classes = [IsAdminOrTeacher]
 
     def get_queryset(self):
-        return Course.objects.prefetch_related('instructors').all()
+        return Course.objects.prefetch_related('instructors__user').all()
     
 
 class ModuleViewSet(ModelViewSet):
