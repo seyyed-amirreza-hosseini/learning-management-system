@@ -18,7 +18,7 @@ class ModuleViewSet(ModelViewSet):
     serializer_class = ModuleSerializer
 
     def get_queryset(self):
-        return Module.objects.filter(course=self.kwargs['course_pk'])
+        return Module.objects.filter(course=self.kwargs['course_pk']).order_by('order')
 
     def get_serializer_context(self):
         return {'course_id': self.kwargs['course_pk']}
@@ -28,7 +28,7 @@ class LessonViewSet(ModelViewSet):
     serializer_class = LessonSerializer
 
     def get_queryset(self):
-        return Lesson.objects.filter(module=self.kwargs['module_pk'])
+        return Lesson.objects.filter(module=self.kwargs['module_pk']).order_by('order')
 
     def get_serializer_context(self):
         return {'module_id': self.kwargs['module_pk']}

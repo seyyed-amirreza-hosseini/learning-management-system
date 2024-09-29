@@ -39,4 +39,4 @@ class LessonSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         module_id = self.context['module_id']
-        return Lesson.objects.create(moduel_id=module_id, **validated_data) 
+        return Lesson.objects.create(module_id=module_id, **validated_data) 
