@@ -25,8 +25,9 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField(method_name='get_full_name')
     user_id = serializers.IntegerField()
-    
+
     class Meta:
         model = Student
         fields = ['id', 'full_name', 'user_id', 'major']

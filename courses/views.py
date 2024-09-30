@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
-from .models import Course, Module, Lesson, Teacher
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer
+from .models import Course, Module, Lesson, Teacher, Student
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher
 
 
@@ -37,7 +37,6 @@ class LessonViewSet(ModelViewSet):
         return {'module_id': self.kwargs['module_pk']}
     
 
-
 class TeacherViewSet(ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
@@ -47,3 +46,8 @@ class TeacherViewSet(ModelViewSet):
             return [IsAdminUser()]
         else:
             return[IsAdminOrOwnTeacher()]
+
+
+class StudentViewSet(ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
