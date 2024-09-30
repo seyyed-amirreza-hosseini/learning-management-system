@@ -25,10 +25,14 @@ class TeacherSerializer(serializers.ModelSerializer):
 
 
 class StudentSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+    
     class Meta:
         model = Student
-        fields = ['id', 'user', 'user_id', 'major']
+        fields = ['id', 'full_name', 'user_id', 'major']
     
+    def get_full_name(self, obj):
+        return f'{obj.user.first_name} {obj.user.last_name}'
 
 class CourseSerializer(serializers.ModelSerializer):
     instructors = TeacherSerializer(many=True, read_only=True)
