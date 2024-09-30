@@ -26,3 +26,16 @@ class IsAdminOrTeacher(BasePermission):
                     request.user and
                     (request.user.is_staff or request.user.role=='TE')
                 )
+
+
+class IsAdminOrOwnTeacher(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+        
+        if request.user.is_authenticated:    
+            if request.method in METHODS:
+                return bool(
+                    request.user and
+                    (request.user.is_staff or obj.user == request.user) 
+                )

@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAdminUser
 from .models import Course, Module, Lesson, Teacher
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer
-from .permissions import IsAdminOrTeacher
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher
 
 
 class CourseViewSet(ModelViewSet):
@@ -40,3 +41,9 @@ class LessonViewSet(ModelViewSet):
 class TeacherViewSet(ModelViewSet):
     queryset = Teacher.objects.all()
     serializer_class = TeacherSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [IsAdminUser()]
+        else:
+            return[IsAdminOrOwnTeacher()]
