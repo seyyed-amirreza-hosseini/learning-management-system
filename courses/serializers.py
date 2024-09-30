@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Teacher, Module, Lesson
+from .models import Course, Teacher, Module, Lesson, Student
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -22,6 +22,12 @@ class TeacherSerializer(serializers.ModelSerializer):
         if Teacher.objects.filter(user_id=validated_data.get('user_id')).exists():
             raise ValidationError('This user is already exists')
         return super().create(validated_data)
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Student
+        fields = ['id', 'user', 'user_id', 'major']
     
 
 class CourseSerializer(serializers.ModelSerializer):
