@@ -1,17 +1,28 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import Course, Teacher, Module, Lesson
 
 
 class TeacherSerializer(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField(method_name='get_full_name')
+    user_id = serializers.IntegerField()
 
     class Meta:
         model = Teacher
-        fields = ['id', 'full_name', 'department']
+        fields = ['id', 'full_name', 'user_id', 'department']
     
     def get_full_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
 
+    def create(self, validated_data):
+        User = get_user_model()
+        if not User.objects.filter(pk=validated_data.get('user_id')).exists():
+            raise ValidationError("User with the give ID was not found")
+        if Teacher.objects.filter(user_id=validated_data.get('user_id')).exists():
+            raise ValidationError('This user is already exists')
+        return super().create(validated_data)
+    
 
 class CourseSerializer(serializers.ModelSerializer):
     instructors = TeacherSerializer(many=True, read_only=True)
