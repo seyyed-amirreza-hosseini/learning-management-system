@@ -2,6 +2,9 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
+from rest_framework.exceptions import ValidationError, PermissionDenied
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.viewsets import GenericViewSet
 from .models import Course, Module, Lesson, Teacher, Student
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher
@@ -49,5 +52,30 @@ class TeacherViewSet(ModelViewSet):
 
 
 class StudentViewSet(ModelViewSet):
-    queryset = Student.objects.all()
     serializer_class = StudentSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_authenticated:
+            if user.is_staff:
+                return Student.objects.all()
+            elif user.role == 'TE':
+                # Ensure we get the teacher instance
+                try:
+                    teacher = Teacher.objects.get(user_id=user.id)
+                except Teacher.DoesNotExist:
+                    raise ValidationError("Teacher with the give ID was not found")  # If the teacher is not found, return an empty queryset
+
+                # Return students enrolled in the teacher's courses
+                return Student.objects.filter(enrollments__course__instructors=teacher)     
+        else:
+            raise PermissionDenied("Method \"GET\" not allowed.") 
+    
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAdminOrTeacher()]
+        elif self.request.method == 'POST':
+            return [IsAdminUser()]
+        else:
+            return []
