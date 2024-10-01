@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
-from .models import Course, Module, Lesson, Teacher, Student
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer
+from .models import Course, Module, Lesson, Teacher, Student, Enrollment
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
 
 
@@ -81,3 +81,8 @@ class StudentViewSet(ModelViewSet):
             return [IsAdminUser()]
         else:
             return [IsAdminOrStudentOwner()]
+
+
+class EnrollmentViewSet(ModelViewSet):
+    queryset = Enrollment.objects.all()
+    serializer_class = EnrollmentSerializer
