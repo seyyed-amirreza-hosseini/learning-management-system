@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Teacher, Module, Lesson, Student
+from .models import Course, Teacher, Module, Lesson, Student, Enrollment
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -62,3 +62,12 @@ class LessonSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         module_id = self.context['module_id']
         return Lesson.objects.create(module_id=module_id, **validated_data) 
+    
+
+class EnrollmentSerializer(serializers.ModelSerializer):
+    course = CourseSerializer()
+    student = StudentSerializer()
+
+    class Meta:
+        model = Enrollment
+        fields = ['id', 'course', 'student', 'enrollment_date', 'status']
