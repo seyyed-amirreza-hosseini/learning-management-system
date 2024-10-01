@@ -7,7 +7,7 @@ from rest_framework.mixins import CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .models import Course, Module, Lesson, Teacher, Student
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
 
 
 class CourseViewSet(ModelViewSet):
@@ -69,6 +69,8 @@ class StudentViewSet(ModelViewSet):
 
                 # Return students enrolled in the teacher's courses
                 return Student.objects.filter(enrollments__course__instructors=teacher)     
+            elif user.role == 'ST':
+                return Student.objects.filter(id=user.id)
         else:
             raise PermissionDenied("Method \"GET\" not allowed.") 
     
@@ -78,4 +80,4 @@ class StudentViewSet(ModelViewSet):
         elif self.request.method == 'POST':
             return [IsAdminUser()]
         else:
-            return []
+            return [IsAdminOrStudentOwner()]
