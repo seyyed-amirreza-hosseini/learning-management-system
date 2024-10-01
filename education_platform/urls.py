@@ -24,4 +24,5 @@ urlpatterns = [
     path('apis/', include('courses.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.jwt')),
 ] + debug_toolbar_urls()
