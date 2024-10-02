@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Teacher, Module, Lesson, Student, Enrollment
+from .models import Course, Teacher, Module, Lesson, Student, Enrollment, Assignment
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -128,3 +128,10 @@ class EnrollmentCreateSerializer(serializers.Serializer):
             return enrollment
         except IntegrityError:
             raise ValidationError('The student is already enrolled in this course.')
+        
+
+class AssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assignment
+        fields = ['id', 'name', 'description', 'due_date', 'module']
+        
