@@ -62,11 +62,28 @@ class LessonSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         module_id = self.context['module_id']
         return Lesson.objects.create(module_id=module_id, **validated_data) 
-    
+
+
+class SimpleCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Course
+        fields = ['name', 'category', 'price']
+
+
+class SimpleStudentSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField(method_name='get_full_name')
+
+    class Meta:
+        model = Student
+        fields = ['full_name', 'major']
+
+    def get_full_name(self, student):
+        return f'{student.user.first_name} {student.user.last_name}'    
+
 
 class EnrollmentSerializer(serializers.ModelSerializer):
-    course = CourseSerializer()
-    student = StudentSerializer()
+    course = SimpleCourseSerializer()
+    student = SimpleStudentSerializer()
 
     class Meta:
         model = Enrollment
