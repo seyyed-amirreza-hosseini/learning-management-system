@@ -3,8 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 from rest_framework.exceptions import ValidationError, PermissionDenied
-from rest_framework.mixins import CreateModelMixin
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.exceptions import MethodNotAllowed
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
@@ -84,10 +83,21 @@ class StudentViewSet(ModelViewSet):
 
 
 class EnrollmentViewSet(ModelViewSet):
-    queryset = Enrollment.objects.select_related('student__user').prefetch_related('course__instructors__user').all()
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrTeacher]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_authenticated:
+            if user.is_staff:
+                return Enrollment.objects.select_related('student__user').prefetch_related('course__instructors__user').all()
+            elif user.role == 'TE':
+                raise MethodNotAllowed(self.request.method, detail="GET method is not allowed for teachers.")
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return EnrollmentCreateSerializer
         return EnrollmentSerializer
+    
+    def get_serializer_context(self):
+        return {'user': self.request.user}

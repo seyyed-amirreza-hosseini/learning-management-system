@@ -96,10 +96,20 @@ class EnrollmentCreateSerializer(serializers.Serializer):
     student_id = serializers.IntegerField()
 
     def validate_course_id(self, course_id):
-        if not Course.objects.filter(id=course_id).exists():
+        user = self.context['user']
+        
+        if Course.objects.filter(id=course_id).exists():
+            if user.is_staff:
+                return course_id
+            
+            if user.role == 'TE':
+                if Course.objects.filter(id=course_id, instructors__user=user).exists():
+                    return course_id
+                else:
+                    raise ValidationError('You can only enroll students in your own courses.')
+        else:
             raise ValidationError('No course with the given ID was found')
-        return course_id
-    
+        
     def validate_student_id(self, student_id):
         if not Student.objects.filter(id=student_id).exists():
             raise ValidationError('No student with the given ID was found')
