@@ -86,3 +86,4 @@ class StudentViewSet(ModelViewSet):
 class EnrollmentViewSet(ModelViewSet):
     queryset = Enrollment.objects.select_related('student__user').prefetch_related('course__instructors__user').all()
     serializer_class = EnrollmentSerializer
+    permission_classes = [IsAdminUser]
