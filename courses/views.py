@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError, PermissionDenied
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.viewsets import GenericViewSet
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
 
 
@@ -85,5 +85,9 @@ class StudentViewSet(ModelViewSet):
 
 class EnrollmentViewSet(ModelViewSet):
     queryset = Enrollment.objects.select_related('student__user').prefetch_related('course__instructors__user').all()
-    serializer_class = EnrollmentSerializer
     permission_classes = [IsAdminUser]
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return EnrollmentCreateSerializer
+        return EnrollmentSerializer

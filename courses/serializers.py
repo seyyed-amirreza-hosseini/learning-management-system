@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from .models import Course, Teacher, Module, Lesson, Student, Enrollment
@@ -67,7 +68,7 @@ class LessonSerializer(serializers.ModelSerializer):
 class SimpleCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
-        fields = ['name', 'category', 'price']
+        fields = ['id', 'name', 'category', 'price']
 
 
 class SimpleStudentSerializer(serializers.ModelSerializer):
@@ -75,7 +76,7 @@ class SimpleStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Student
-        fields = ['full_name', 'major']
+        fields = ['id', 'full_name', 'major']
 
     def get_full_name(self, student):
         return f'{student.user.first_name} {student.user.last_name}'    
@@ -88,3 +89,32 @@ class EnrollmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Enrollment
         fields = ['id', 'course', 'student', 'enrollment_date', 'status']
+
+
+class EnrollmentCreateSerializer(serializers.Serializer):
+    course_id = serializers.IntegerField()
+    student_id = serializers.IntegerField()
+
+    def validate_course_id(self, course_id):
+        if not Course.objects.filter(id=course_id).exists():
+            raise ValidationError('No course with the given ID was found')
+        return course_id
+    
+    def validate_student_id(self, student_id):
+        if not Student.objects.filter(id=student_id).exists():
+            raise ValidationError('No student with the given ID was found')
+        return student_id
+    
+    def save(self, **kwargs):
+        validated_data = self.validated_data.copy()
+        
+        course_id = validated_data.pop('course_id')
+        student_id = validated_data.pop('student_id')
+
+        grade = validated_data.get('grade', 0)
+
+        try:
+            enrollment = Enrollment.objects.create(course_id=course_id, student_id=student_id, grade=grade)
+            return enrollment
+        except IntegrityError:
+            raise ValidationError('The student is already enrolled in this course.')
