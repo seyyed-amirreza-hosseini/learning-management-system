@@ -83,7 +83,6 @@ class StudentViewSet(ModelViewSet):
 
 
 class EnrollmentViewSet(ModelViewSet):
-    permission_classes = [IsAdminOrTeacher]
 
     def get_queryset(self):
         user = self.request.user
@@ -101,3 +100,9 @@ class EnrollmentViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {'user': self.request.user}
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [IsAdminOrTeacher()]
+        else:
+            return [IsAdminUser()]
