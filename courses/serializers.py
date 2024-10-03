@@ -131,7 +131,11 @@ class EnrollmentCreateSerializer(serializers.Serializer):
         
 
 class AssignmentSerializer(serializers.ModelSerializer):
+    course = CourseSerializer(read_only=True)
+    module = ModuleSerializer(read_only=True)
+    lesson = LessonSerializer(read_only=True)
+    
     class Meta:
         model = Assignment
-        fields = ['id', 'name', 'description', 'due_date', 'module']
+        fields = ['id', 'name', 'description', 'due_date', 'course', 'module', 'lesson']
         
