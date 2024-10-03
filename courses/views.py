@@ -109,5 +109,9 @@ class EnrollmentViewSet(ModelViewSet):
         
 
 class AssignmentViewSet(ModelViewSet):
-    queryset = Assignment.objects.all()
+    queryset = Assignment.objects \
+        .select_related('course') \
+        .select_related('module') \
+        .select_related('lesson') \
+        .all()
     serializer_class = AssignmentSerializer
