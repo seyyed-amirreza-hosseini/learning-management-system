@@ -2,11 +2,10 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
-from rest_framework.exceptions import ValidationError, PermissionDenied
-from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsAdminOrTeacherOrStudent
 
 
 class CourseViewSet(ModelViewSet):
@@ -109,9 +108,23 @@ class EnrollmentViewSet(ModelViewSet):
         
 
 class AssignmentViewSet(ModelViewSet):
-    queryset = Assignment.objects \
-        .select_related('course') \
-        .select_related('module') \
-        .select_related('lesson') \
-        .all()
     serializer_class = AssignmentSerializer
+    permission_classes = [IsAdminOrTeacherOrStudent]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_authenticated:
+            if user.is_staff:
+                return Assignment.objects \
+                    .select_related('course') \
+                    .select_related('module') \
+                    .select_related('lesson') \
+                    .all()
+            elif user.role == 'ST':
+                return Assignment.objects.filter(course__enrollments__student__user=user)
+            elif user.role == 'TE':
+                teacher = Teacher.objects.get(user=user)
+                return Assignment.objects.filter(course__instructors__in=[teacher])
+        
+        raise MethodNotAllowed(self.request.method)
