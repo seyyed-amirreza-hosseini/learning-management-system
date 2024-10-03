@@ -122,7 +122,7 @@ class Enrollment(models.Model):
     enrollment_date = models.DateField(auto_now_add=True)
     progress = models.FloatField(default=0.0)
     status = models.CharField(max_length=10, choices=Status, default=Status.ACTIVE)
-    grade = models.DecimalField(max_digits=4, decimal_places=2)
+    grade = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     feedback = models.TextField(blank=True)
     completion_date = models.DateField(null=True, blank=True)
 
