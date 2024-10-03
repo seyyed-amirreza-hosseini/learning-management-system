@@ -104,10 +104,12 @@ class Assignment(models.Model):
     description = models.TextField()
     due_date = models.DateTimeField()
     max_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxLengthValidator(20)])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assignments')
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='assignments')
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='assignments')
 
     def __str__(self):
-        return f'{self.name}: {self.module.name}'
+        return f'{self.name}: {self.course.name} - {self.module.name} - {self.lesson.name}'
 
 
 class Enrollment(models.Model):
