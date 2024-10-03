@@ -128,14 +128,25 @@ class EnrollmentCreateSerializer(serializers.Serializer):
             return enrollment
         except IntegrityError:
             raise ValidationError('The student is already enrolled in this course.')
-        
+
+
+class SimpleModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = ['id', 'name']
+
+
+class SimpleLessonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ['id', 'name']
+
 
 class AssignmentSerializer(serializers.ModelSerializer):
-    course = CourseSerializer(read_only=True)
-    module = ModuleSerializer(read_only=True)
-    lesson = LessonSerializer(read_only=True)
-    
+    course = SimpleCourseSerializer(read_only=True)
+    module = SimpleModuleSerializer(read_only=True)
+    lesson = SimpleLessonSerializer(read_only=True)
+
     class Meta:
         model = Assignment
         fields = ['id', 'name', 'description', 'due_date', 'course', 'module', 'lesson']
-        
