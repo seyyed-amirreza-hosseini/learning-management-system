@@ -113,18 +113,19 @@ class AssignmentViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-
-        if user.is_authenticated:
-            if user.is_staff:
-                return Assignment.objects \
+        queryset = Assignment.objects \
                     .select_related('course') \
                     .select_related('module') \
                     .select_related('lesson') \
                     .all()
+
+        if user.is_authenticated:
+            if user.is_staff:
+                return queryset
             elif user.role == 'ST':
-                return Assignment.objects.filter(course__enrollments__student__user=user)
+                return queryset.filter(course__enrollments__student__user=user)
             elif user.role == 'TE':
                 teacher = Teacher.objects.get(user=user)
-                return Assignment.objects.filter(course__instructors__in=[teacher])
+                return queryset.filter(course__instructors__in=[teacher])
         
         raise MethodNotAllowed(self.request.method)
