@@ -4,7 +4,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsAdminOrTeacherOrStudent
 
 
@@ -109,7 +109,6 @@ class EnrollmentViewSet(ModelViewSet):
 
 class AssignmentViewSet(ModelViewSet):
     serializer_class = AssignmentSerializer
-    permission_classes = [IsAdminOrTeacherOrStudent]
 
     def get_queryset(self):
         user = self.request.user
@@ -129,5 +128,10 @@ class AssignmentViewSet(ModelViewSet):
         
         raise MethodNotAllowed(self.request.method)
     
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return AssignmentCreateSerializer
+        return AssignmentSerializer
+
     def get_serializer_context(self):
         return {'user': self.request.user}
