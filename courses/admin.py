@@ -106,7 +106,7 @@ class AssignmentAdmin(admin.ModelAdmin):
     list_display = ['name', 'description', 'due_date', 'module']
     list_per_page = 10
     search_fields = ['name']
-    autocomplete_fields = ['module']
+    autocomplete_fields = ['course', 'module', 'lesson']
 
 
 @admin.register(Submission)
