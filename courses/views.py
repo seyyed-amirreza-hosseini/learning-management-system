@@ -128,3 +128,6 @@ class AssignmentViewSet(ModelViewSet):
                 return queryset.filter(course__instructors__user=user)
         
         raise MethodNotAllowed(self.request.method)
+    
+    def get_serializer_context(self):
+        return {'user': self.request.user}
