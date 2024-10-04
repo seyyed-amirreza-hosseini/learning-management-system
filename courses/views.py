@@ -125,7 +125,6 @@ class AssignmentViewSet(ModelViewSet):
             elif user.role == 'ST':
                 return queryset.filter(course__enrollments__student__user=user)
             elif user.role == 'TE':
-                teacher = Teacher.objects.get(user=user)
-                return queryset.filter(course__instructors__in=[teacher])
+                return queryset.filter(course__instructors__user=user)
         
         raise MethodNotAllowed(self.request.method)
