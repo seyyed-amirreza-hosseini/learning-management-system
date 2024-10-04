@@ -108,7 +108,7 @@ class EnrollmentViewSet(ModelViewSet):
         
 
 class AssignmentViewSet(ModelViewSet):
-    serializer_class = AssignmentSerializer
+    permission_classes = [IsAdminOrTeacherOrStudent]
 
     def get_queryset(self):
         user = self.request.user
