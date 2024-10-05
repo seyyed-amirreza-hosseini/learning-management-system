@@ -108,30 +108,10 @@ class EnrollmentViewSet(ModelViewSet):
         
 
 class AssignmentViewSet(ModelViewSet):
-    permission_classes = [IsAdminOrTeacherOrStudent]
-
     def get_queryset(self):
-        user = self.request.user
-        queryset = Assignment.objects \
-                    .select_related('course') \
-                    .select_related('module') \
-                    .select_related('lesson') \
-                    .all()
-
-        if user.is_authenticated:
-            if user.is_staff:
-                return queryset
-            elif user.role == 'ST':
-                return queryset.filter(course__enrollments__student__user=user)
-            elif user.role == 'TE':
-                return queryset.filter(course__instructors__user=user)
-        
-        raise MethodNotAllowed(self.request.method)
+        return Assignment.objects.select_related('lesson__module__course')
     
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return AssignmentCreateSerializer
         return AssignmentSerializer
-
-    def get_serializer_context(self):
-        return {'user': self.request.user}

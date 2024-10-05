@@ -143,91 +143,35 @@ class SimpleLessonSerializer(serializers.ModelSerializer):
 
 
 class AssignmentSerializer(serializers.ModelSerializer):
-    course = SimpleCourseSerializer(read_only=True)
-    module = SimpleModuleSerializer(read_only=True)
-    lesson = SimpleLessonSerializer(read_only=True)
+    course_name = serializers.SerializerMethodField(method_name='get_course_name')
+    module_name = serializers.SerializerMethodField(method_name='get_module_name')
+    lesson = LessonSerializer(read_only=True)
 
     class Meta:
         model = Assignment
-        fields = ['id', 'name', 'description', 'due_date', 'course', 'module', 'lesson']
+        fields = ['id', 'name', 'description', 'due_date', 'course_name', 'module_name', 'lesson']
 
+    def get_course_name(self, obj):
+        return obj.lesson.module.course.name
+    
+    def get_module_name(self, obj):
+        return obj.lesson.module.name
+    
 
-from rest_framework import serializers
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError
-
-class AssignmentCreateSerializer(serializers.Serializer):
-    course_id = serializers.IntegerField()
-    module_id = serializers.IntegerField()
+class AssignmentCreateSerializer(serializers.ModelSerializer):
     lesson_id = serializers.IntegerField()
 
-    def validate_course_id(self, course_id):
-        user = self.context['user']
-        if not Course.objects.filter(id=course_id).exists():
-            raise ValidationError('No course with the given ID was found')
+    class Meta:
+        model = Assignment
+        fields = ['id', 'name', 'description', 'due_date', 'lesson_id']
 
-        if user.is_staff:
-            return course_id
-
-        if user.role == 'TE':
-            if Course.objects.filter(id=course_id, instructors__user=user).exists():
-                return course_id
-            else:
-                raise ValidationError('You can only create assignments for your own courses.')
-
-    def validate_module_id(self, module_id):
-        user = self.context['user']
-        course_id = self.initial_data.get('course_id')
-
-        if not Course.objects.filter(id=course_id).exists():
-            raise ValidationError('No course with the given ID was found')
-
-        if not Module.objects.filter(course_id=course_id, id=module_id).exists():
-            raise ValidationError('No module with the given ID was found')
-
-        if user.is_staff:
-            return module_id
-
-        if user.role == 'TE':
-            if Course.objects.filter(id=course_id, instructors__user=user).exists():
-                return module_id
-            else:
-                raise ValidationError('You can only create assignments for your own courses.')
-
-    def validate_lesson_id(self, lesson_id):
-        user = self.context['user']
-        course_id = self.initial_data.get('course_id')
-        module_id = self.initial_data.get('module_id')
-
-        if not Course.objects.filter(id=course_id).exists():
-            raise ValidationError('No course with the given ID was found')
-
-        if not Module.objects.filter(id=module_id, course_id=course_id).exists():
-            raise ValidationError('No module with the given ID was found')
-
-        if not Lesson.objects.filter(course_id=course_id, module_id=module_id, id=lesson_id).exists():
-            raise ValidationError('No lesson with the given ID was found')
-
-        if user.is_staff:
-            return lesson_id
-
-        if user.role == 'TE':
-            if Course.objects.filter(id=course_id, instructors__user=user).exists():
-                return lesson_id
-            else:
-                raise ValidationError('You can only create assignments for your own courses.')
-
-    def save(self, **kwargs):
-        validated_data = self.validated_data.copy()
-
-        course_id = validated_data.pop('course_id')
-        module_id = validated_data.pop('module_id')
+    def create(self, validated_data):
         lesson_id = validated_data.pop('lesson_id')
 
         try:
-            assignment = Assignment.objects.create(
-                course_id=course_id, module_id=module_id, lesson_id=lesson_id
-            )
-            return assignment
-        except IntegrityError:
-            raise ValidationError('The assignment already exists for this course.')
+            lesson = Lesson.objects.get(id=lesson_id)
+        except Lesson.DoesNotExist:
+            raise serializers.ValidationError({"lesson_id": "Invalide lesson ID."})
+        
+        assignment = Assignment.objects.create(lesson_id=lesson.id, **validated_data)
+        return assignment
