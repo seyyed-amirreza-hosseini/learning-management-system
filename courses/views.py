@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer
@@ -108,9 +108,20 @@ class EnrollmentViewSet(ModelViewSet):
         
 
 class AssignmentViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
-        return Assignment.objects.select_related('lesson__module__course')
-    
+        user = self.request.user
+        queryset = Assignment.objects.select_related('lesson__module__course')
+        
+        if user.is_staff:
+            return queryset
+        elif user.role == 'TE':
+            teacher = Teacher.objects.get(user_id=user.id)
+            return queryset.filter(lesson__module__course__instructors__in=[teacher])
+        elif user.role == 'ST':
+            student = Student.objects.get(user_id=user.id)
+            return queryset.filter(lesson__module__course__enrollments__student=student)
+
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return AssignmentCreateSerializer
