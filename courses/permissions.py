@@ -51,20 +51,3 @@ class IsAdminOrStudentOwner(BasePermission):
                 request.user and
                 (request.user.is_staff or obj.user == request.user)
             )
-        
-
-class IsAdminOrTeacherOrStudent(BasePermission):
-    def has_permission(self, request, view):
-
-        if request.user.is_authenticated:
-            if request.method == 'GET':
-                return bool(
-                    request.user and
-                    (request.user.is_staff or request.user.role == 'TE', request.user.role == 'ST')
-                )
-            
-            elif request.method == 'POST':
-                return bool(
-                    request.user and
-                    (request.user.is_staff or request.user.role == 'TE')
-                )

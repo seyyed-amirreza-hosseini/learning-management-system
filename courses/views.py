@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsAdminOrTeacherOrStudent
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
 
 
 class CourseViewSet(ModelViewSet):
