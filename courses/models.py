@@ -103,7 +103,10 @@ class Assignment(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     due_date = models.DateTimeField()
-    max_score = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxLengthValidator(20)])
+    max_score = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(0), MaxLengthValidator(20)],
+        default=0
+    )
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='assignments')
 
     def __str__(self):
