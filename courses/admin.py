@@ -103,10 +103,10 @@ class EnrollmentAdmin(admin.ModelAdmin):
 
 @admin.register(Assignment)
 class AssignmentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description', 'due_date', 'module']
+    list_display = ['name', 'description', 'due_date', 'lesson']
     list_per_page = 10
     search_fields = ['name']
-    autocomplete_fields = ['course', 'module', 'lesson']
+    autocomplete_fields = ['lesson']
 
 
 @admin.register(Submission)
