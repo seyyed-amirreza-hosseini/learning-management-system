@@ -2,7 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, SubmissionCreateSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
 
 
@@ -141,8 +141,6 @@ class AssignmentViewSet(ModelViewSet):
 
 
 class SubmissionViewSet(ModelViewSet):
-    serializer_class = SubmissionSerializer
-
     def get_queryset(self):
         assignment_id = self.kwargs['assignment_pk']
 
@@ -151,3 +149,11 @@ class SubmissionViewSet(ModelViewSet):
             .select_related('assignment__lesson__module__course') \
             .filter(assignment_id=assignment_id) \
             .all()
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return SubmissionCreateSerializer
+        return SubmissionSerializer
+    
+    def get_serializer_context(self):
+        return {'assignment_id': self.kwargs['assignment_pk']}
