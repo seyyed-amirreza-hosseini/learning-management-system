@@ -141,6 +141,5 @@ class AssignmentViewSet(ModelViewSet):
 
 
 class SubmissionViewSet(ModelViewSet):
-    queryset = Submission.objects.all()
+    queryset = Submission.objects.select_related('student__user').all()
     serializer_class = SubmissionSerializer
-    
