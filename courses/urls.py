@@ -16,4 +16,7 @@ courses_router.register('modules', views.ModuleViewSet, basename='course-moduels
 modules_router = routers.NestedDefaultRouter(courses_router, 'modules', lookup='module')
 modules_router.register('lessons', views.LessonViewSet, basename='module-lessons')
 
-urlpatterns = router.urls + courses_router.urls + modules_router.urls
+assignment_router = routers.NestedDefaultRouter(router, 'assignments', lookup='assignment')
+assignment_router.register('submissions', views.SubmissionViewSet, basename='assignment-submissions')
+
+urlpatterns = router.urls + courses_router.urls + modules_router.urls + assignment_router.urls
