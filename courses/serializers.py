@@ -178,7 +178,7 @@ class AssignmentCreateSerializer(serializers.ModelSerializer):
     
 
 class SubmissionSerializer(serializers.ModelSerializer):
-    student  = SimpleStudentSerializer()
+    student = SimpleStudentSerializer(read_only=True)
 
     class Meta:
         model = Submission
