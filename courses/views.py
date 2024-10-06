@@ -1,12 +1,8 @@
-from django.shortcuts import render
-from rest_framework.decorators import api_view
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer
+from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
 
 
@@ -142,3 +138,9 @@ class AssignmentViewSet(ModelViewSet):
             raise PermissionDenied('You can only create assignments for your own courses.')
         
         serializer.save()
+
+
+class SubmissionViewSet(ModelViewSet):
+    queryset = Submission.objects.all()
+    serializer_class = SubmissionSerializer
+    
