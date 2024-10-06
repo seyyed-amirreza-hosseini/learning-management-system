@@ -148,5 +148,6 @@ class SubmissionViewSet(ModelViewSet):
 
         return Submission.objects \
             .select_related('student__user') \
+            .select_related('assignment__lesson__module__course') \
             .filter(assignment_id=assignment_id) \
             .all()
