@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxLengthValidator
+from django.core.validators import MinValueValidator, MaxLengthValidator, FileExtensionValidator
 
 
 class Student(models.Model):
@@ -139,7 +139,12 @@ class Submission(models.Model):
     submitted_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     feedback = models.TextField(blank=True)
-    file = models.FileField(upload_to='submissions/', null=True, blank=True)
+    file = models.FileField(
+        upload_to='submissions/',
+        null=True,
+        blank=True,
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'rar'])]            
+    )
 
     class Meta:
         constraints = [
