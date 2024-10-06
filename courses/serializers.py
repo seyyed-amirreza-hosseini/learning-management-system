@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Teacher, Module, Lesson, Student, Enrollment, Assignment
+from .models import Course, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -175,3 +175,10 @@ class AssignmentCreateSerializer(serializers.ModelSerializer):
         
         assignment = Assignment.objects.create(lesson_id=lesson.id, **validated_data)
         return assignment
+    
+
+class SubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = ['id', 'assignment', 'student', 'submitted_at', 'updated_at']
+        
