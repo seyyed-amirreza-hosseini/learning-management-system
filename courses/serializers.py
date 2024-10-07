@@ -185,16 +185,44 @@ class SubmissionSerializer(serializers.ModelSerializer):
         fields = ['id', 'student', 'submitted_at', 'updated_at', 'file']
 
 
-class SubmissionCreateSerializer(serializers.ModelSerializer):
+class StudentSubmissionCreateSerializer(serializers.ModelSerializer):
     student_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Submission
-        fields = ['id', 'student_id']
+        fields = ['id', 'student_id', 'file']
 
     def create(self, validated_data):
         assignment_id = self.context['assignment_id']
         student_id = self.context['student_id']
+
+        try:
+            student = Student.objects.get(id=student_id)
+        except Student.DoesNotExist:
+            raise serializers.ValidationError({"student_id": "Invalide student ID."})
+        
+        try:
+            submission = Submission.objects.create(
+                assignment_id=assignment_id,
+                student=student,
+                **validated_data
+            )
+        except IntegrityError:
+            raise serializers.ValidationError("You have already submitted this assignment.")
+        
+        return submission
+
+
+class AdminSubmissionCreateSerializer(serializers.ModelSerializer):
+    student_id = serializers.IntegerField()
+
+    class Meta:
+        model = Submission
+        fields = ['id', 'student_id', 'file']
+
+    def create(self, validated_data):
+        assignment_id = self.context['assignment_id']
+        student_id = self.validated_data['student_id']
 
         try:
             student = Student.objects.get(id=student_id)
