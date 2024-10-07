@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
+from .models import Enrollment
 
 
 METHODS = ['POST', 'PUT', 'PATCH', 'DELETE']
@@ -51,3 +52,47 @@ class IsAdminOrStudentOwner(BasePermission):
                 request.user and
                 (request.user.is_staff or obj.user == request.user)
             )
+
+
+class IsStudentAndSubmissionOwner(BasePermission):
+    """
+    Custom permission to allow students to update or delete only their own submissions
+    if they are enrolled in the course related to the assignment.
+    """
+        
+    def has_permission(self, request, view):
+        if request.user.is_staff:
+            return True
+
+        if request.user.is_authenticated:
+            return bool( 
+                request.user and request.user.role == 'ST' 
+            )
+        else:
+            return False
+    
+    def has_object_permission(self, request, view, obj):
+        # Let admin to do everything
+        if request.user.is_staff:
+            return True
+        
+        # Ensure the user is authenticated and is a student
+        if not (request.user.is_authenticated and request.user.role == 'ST'):
+            return False
+
+        # The obj here is the Submission object
+        submission = obj  
+        student = request.user.student
+
+        # Check if the submission belongs to the student
+        if submission.student != student:
+            return False
+        
+        # Check if the student is enrolled in the course related to the assignment
+        assignment = submission.assignment
+        course = assignment.lesson.module.course
+        
+        # Ensure the student is enrolled in the course
+        is_enrolled = Enrollment.objects.filter(course=course, student=student).exists()
+
+        return is_enrolled

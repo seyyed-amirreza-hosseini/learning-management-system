@@ -2,8 +2,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, SubmissionCreateSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner
 
 
 class CourseViewSet(ModelViewSet):
@@ -141,6 +141,8 @@ class AssignmentViewSet(ModelViewSet):
 
 
 class SubmissionViewSet(ModelViewSet):
+    permission_classes = [IsStudentAndSubmissionOwner]
+    
     def get_queryset(self):
         assignment_id = self.kwargs['assignment_pk']
 
@@ -151,12 +153,24 @@ class SubmissionViewSet(ModelViewSet):
             .all()
 
     def get_serializer_class(self):
+        user = self.request.user
+
         if self.request.method == 'POST':
-            return SubmissionCreateSerializer
+            if user.is_staff:
+                return AdminSubmissionCreateSerializer
+            elif user.role == 'ST': 
+                return StudentSubmissionCreateSerializer
         return SubmissionSerializer
     
-    def get_serializer_context(self):
+    def get_serializer_context(self):    
+        user = self.request.user
+        
+        if user.role == 'ST':
+            student_id = user.student.id
+        elif user.is_staff:
+            student_id = None
+        
         return {
             'assignment_id': self.kwargs['assignment_pk'],
-            'student_id': self.request.user.student.id
+            'student_id': student_id
         }
