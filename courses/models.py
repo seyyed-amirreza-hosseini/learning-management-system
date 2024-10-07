@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxLengthValidator, FileEx
 
 
 class Student(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='student')
     major = models.CharField(max_length=100, blank=True)
     
     @property
