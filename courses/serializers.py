@@ -186,7 +186,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
 
 
 class SubmissionCreateSerializer(serializers.ModelSerializer):
-    student_id = serializers.IntegerField()
+    student_id = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Submission
@@ -194,7 +194,7 @@ class SubmissionCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         assignment_id = self.context['assignment_id']
-        student_id = validated_data['student_id']
+        student_id = self.context['student_id']
 
         try:
             student = Student.objects.get(id=student_id)
