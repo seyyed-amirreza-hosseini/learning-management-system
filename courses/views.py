@@ -156,4 +156,7 @@ class SubmissionViewSet(ModelViewSet):
         return SubmissionSerializer
     
     def get_serializer_context(self):
-        return {'assignment_id': self.kwargs['assignment_pk']}
+        return {
+            'assignment_id': self.kwargs['assignment_pk'],
+            'student_id': self.request.user.student.id
+        }
