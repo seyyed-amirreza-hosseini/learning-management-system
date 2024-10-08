@@ -99,6 +99,17 @@ class Lesson(models.Model):
         return self.name
 
 
+class VideoLecture(models.Model):
+    lesson = models.ForeignKey(Lesson, related_name='video_lectures', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    video_url = models.URLField()  # URL for the video (YouTube, Vimeo, etc.)
+    description = models.TextField(blank=True, null=True)
+    duration = models.DurationField(blank=True, null=True)  # Duration of the video
+
+    def __str__(self):
+        return self.title
+
+
 class Assignment(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
