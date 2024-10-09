@@ -110,6 +110,41 @@ class VideoLecture(models.Model):
         return self.title
 
 
+class Quiz(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='quizzes')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    passing_score = models.IntegerField(default=50)
+
+    def __str__(self):
+        return self.title
+
+
+class Question(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    text = models.TextField()
+
+    def __str__(self):
+        return self.text
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
+    text = models.TextField()
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
+
+class QuizSubmission(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    score = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f'Submission by {self.student.user.first_name} for quiz {self.quiz.title} with score {self.score}'
+
+
 class Assignment(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
