@@ -12,6 +12,7 @@ router.register('assignments', views.AssignmentViewSet, basename='assignment')
 
 courses_router = routers.NestedDefaultRouter(router, 'courses', lookup='course')
 courses_router.register('modules', views.ModuleViewSet, basename='course-moduels')
+courses_router.register('reviews', views.ReviewViewSet, basename='course-reviews')
 
 modules_router = routers.NestedDefaultRouter(courses_router, 'modules', lookup='module')
 modules_router.register('lessons', views.LessonViewSet, basename='module-lessons')
