@@ -56,9 +56,14 @@ class CourseSerializer(serializers.ModelSerializer):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField(method_name='get_full_name')
+
     class Meta:
         model = Review
-        fields = ['id', 'student', 'course', 'comment', 'rating']
+        fields = ['id', 'full_name', 'comment', 'rating']
+
+    def get_full_name(self, obj):
+        return f'{obj.student.user.first_name} {obj.student.user.last_name}'
 
 
 class ModuleSerializer(serializers.ModelSerializer):
