@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
-from django.core.validators import MinValueValidator, MaxLengthValidator, FileExtensionValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MaxLengthValidator, FileExtensionValidator
 
 
 class Student(models.Model):
@@ -53,7 +53,7 @@ class Review(models.Model):
     comment = models.TextField()
     rating = models.PositiveSmallIntegerField(
         default=1, 
-        validators=[MinValueValidator(0), MinValueValidator(5)]
+        validators=[MinValueValidator(0), MaxValueValidator(5)]
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
