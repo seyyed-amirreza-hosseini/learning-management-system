@@ -25,7 +25,7 @@ class ReviewViewSet(ModelViewSet):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        return Review.objects.filter(course_id=self.kwargs['course_pk'])
+        return Review.objects.filter(course_id=self.kwargs['course_pk']).select_related('student__user')
     
 
 class ModuleViewSet(ModelViewSet):
