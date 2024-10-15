@@ -36,13 +36,23 @@ class StudentSerializer(serializers.ModelSerializer):
     def get_full_name(self, obj):
         return f'{obj.user.first_name} {obj.user.last_name}'
 
+
 class CourseSerializer(serializers.ModelSerializer):
     instructors = TeacherSerializer(many=True, read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
+    average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
-        fields = ['id', 'name', 'description', 'category', 'level', 'price', 'instructors', 'updated_at']
+        fields = ['id', 'name', 'description', 'category', 'level', 'price', 'average_rating', 'instructors', 'updated_at']
+
+    def get_average_rating(self, obj):
+        reviews = obj.reviews.all()
+
+        if reviews.exists():
+            return round(sum(review.rating for review in reviews) / reviews.count(), 2)
+            
+        return 0
 
 
 class ReviewSerializer(serializers.ModelSerializer):
