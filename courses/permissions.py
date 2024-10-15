@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission, SAFE_METHODS
-from .models import Enrollment
+from .models import Course, Enrollment, Student, Teacher
 
 
 METHODS = ['POST', 'PUT', 'PATCH', 'DELETE']
@@ -96,3 +96,34 @@ class IsStudentAndSubmissionOwner(BasePermission):
         is_enrolled = Enrollment.objects.filter(course=course, student=student).exists()
 
         return is_enrolled
+
+
+class IsStudentEnrolledOrTeacherInstructor(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_staff:
+            return True
+        
+        elif request.user.is_authenticated:
+            if request.user.role == 'ST' or request.user.role == 'TE':
+                course_id = view.kwargs.get('course_id')
+
+                if not course_id:
+                    return False
+
+                student = Student.objects.filter(user_id=request.user.id)
+
+                is_student_enrolled = Enrollment.objects.filter(
+                    course_id=course_id,
+                    student_id=student.id
+                ).exists()
+
+                teacher = Teacher.objects.filter(user_id=request.user.id)
+
+                is_teacher_instructor = Course.objects.filter(
+                    id=course_id,
+                    instructors=teacher
+                ).exists()
+        else:
+            return False
+
+        return is_student_enrolled or is_teacher_instructor
