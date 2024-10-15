@@ -57,6 +57,9 @@ class Review(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Review: {self.pk} by {self.student.user.email} for {self.course.name} course"
+    
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['student', 'course'], name='unique_student_course')
