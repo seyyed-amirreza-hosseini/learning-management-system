@@ -15,7 +15,10 @@ class CourseViewSet(ModelViewSet):
     filterset_class = CourseFilter
 
     def get_queryset(self):
-        return Course.objects.prefetch_related('instructors__user').all()
+        return Course.objects \
+            .prefetch_related('instructors__user') \
+            .prefetch_related('reviews') \
+            .all()
 
 
 class ReviewViewSet(ModelViewSet):
