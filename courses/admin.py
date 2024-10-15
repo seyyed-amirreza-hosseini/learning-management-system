@@ -4,7 +4,7 @@ from django.db.models.query import QuerySet
 from django.http import HttpRequest
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
-from .models import Student, Teacher, Course, Module, Lesson, Enrollment, Assignment, Submission, InstructorCourse
+from .models import Student, Teacher, Course, Review, Module, Lesson, Enrollment, Assignment, Submission, InstructorCourse
 
 
 @admin.register(Course)
@@ -32,6 +32,11 @@ class CourseAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         return queryset.prefetch_related('instructors__user').annotate(modules_count=Count('modules'))
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['student', 'course', 'comment', 'rating', 'created_at']
 
 
 @admin.register(Module)
