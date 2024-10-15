@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission
+from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -43,6 +43,12 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'name', 'description', 'category', 'level', 'price', 'instructors', 'updated_at']
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id', 'student', 'course', 'comment', 'rating']
 
 
 class ModuleSerializer(serializers.ModelSerializer):
