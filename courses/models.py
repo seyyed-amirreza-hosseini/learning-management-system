@@ -45,6 +45,22 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class Review(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='reviews')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='reviews')
+    comment = models.TextField()
+    rating = models.PositiveSmallIntegerField(
+        default=1, 
+        validators=[MinValueValidator(0), MinValueValidator(5)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['student', 'course'], name='unique_student_course')
+        ]
 
 
 # Intermediate Table
