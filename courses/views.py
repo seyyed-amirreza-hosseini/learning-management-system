@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor
 from .filters import CourseFilter
 
 
@@ -22,6 +22,8 @@ class CourseViewSet(ModelViewSet):
 
 
 class ReviewViewSet(ModelViewSet):
+    permission_classes = [IsStudentEnrolledOrTeacherInstructor]
+    
     def get_queryset(self):
         return Review.objects.filter(course_id=self.kwargs['course_pk']).select_related('student__user')
     
