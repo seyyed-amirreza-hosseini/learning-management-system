@@ -22,9 +22,11 @@ class CourseViewSet(ModelViewSet):
 
 
 class ReviewViewSet(ModelViewSet):
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
+    def get_queryset(self):
+        return Review.objects.filter(course_id=self.kwargs['course_pk'])
+    
 
 class ModuleViewSet(ModelViewSet):
     serializer_class = ModuleSerializer
