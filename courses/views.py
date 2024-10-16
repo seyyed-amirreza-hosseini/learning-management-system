@@ -1,10 +1,10 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner
 from .filters import CourseFilter
 
 
@@ -17,15 +17,12 @@ class CourseViewSet(ModelViewSet):
     def get_queryset(self):
         return Course.objects \
             .prefetch_related('instructors__user') \
-            .prefetch_related('reviews') \
             .all()
 
 
 class ReviewViewSet(ModelViewSet):
-    permission_classes = [IsStudentEnrolledOrTeacherInstructor]
-    
     def get_queryset(self):
-        return Review.objects.filter(course_id=self.kwargs['course_pk']).select_related('student__user')
+        return Review.objects.filter(course_id=self.kwargs['course_pk'])
     
     def get_serializer_context(self):
         return {
@@ -38,6 +35,14 @@ class ReviewViewSet(ModelViewSet):
             return ReviewCreateSerializer
         return ReviewSerializer
     
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        elif self.request.method == 'POST':
+            return [IsStudentEnrolledOrTeacherInstructor()]
+        else:
+            return [IsStudentOrTeacherReviewOwner()]
+
 
 class ModuleViewSet(ModelViewSet):
     serializer_class = ModuleSerializer
