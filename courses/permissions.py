@@ -127,3 +127,16 @@ class IsStudentEnrolledOrTeacherInstructor(BasePermission):
             return False
 
         return is_student_enrolled or is_teacher_instructor
+
+
+class IsStudentOrTeacherReviewOwner(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_staff:
+            return True
+        elif request.user.is_authenticated:
+            return bool(
+                request.user and
+                obj.user == request.user 
+            )
+        else:
+            return False
