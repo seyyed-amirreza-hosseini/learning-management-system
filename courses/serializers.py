@@ -63,7 +63,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ['id', 'full_name', 'comment', 'rating']
 
     def get_full_name(self, obj):
-        return f'{obj.student.user.first_name} {obj.student.user.last_name}'
+        return f'{obj.user.first_name} {obj.user.last_name}'
     
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
@@ -76,9 +76,7 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         course_id = self.context['course_id']
         user_id = self.context['user_id']
         
-        student = Student.objects.get(user_id=user_id)
-
-        return Review.objects.create(course_id=course_id, student_id=student.id, **validated_data)
+        return Review.objects.create(course_id=course_id, user_id=user_id, **validated_data)
 
 
 class ModuleSerializer(serializers.ModelSerializer):
