@@ -67,7 +67,7 @@ class LessonViewSet(ModelViewSet):
     
 
 class TeacherViewSet(ModelViewSet):
-    queryset = Teacher.objects.all()
+    queryset = Teacher.objects.select_related('user').all()
     serializer_class = TeacherSerializer
 
     def get_permissions(self):
