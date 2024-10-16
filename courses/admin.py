@@ -36,7 +36,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ['student', 'course', 'comment', 'rating', 'created_at']
+    list_display = ['user', 'course', 'comment', 'rating', 'created_at']
 
 
 @admin.register(Module)
