@@ -48,7 +48,7 @@ class Course(models.Model):
     
 
 class Review(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='reviews')
     comment = models.TextField()
     rating = models.PositiveSmallIntegerField(
@@ -58,11 +58,11 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Review: {self.pk} by {self.student.user.email} for {self.course.name} course"
+        return f"Review: {self.pk} by {self.user.email} for {self.course.name} course"
     
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['student', 'course'], name='unique_student_course')
+            models.UniqueConstraint(fields=['user', 'course'], name='unique_user_course')
         ]
 
 
