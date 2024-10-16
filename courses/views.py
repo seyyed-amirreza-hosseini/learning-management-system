@@ -16,7 +16,7 @@ class CourseViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Course.objects \
-            .prefetch_related('instructors__user') \
+            .prefetch_related('instructors__user', 'reviews') \
             .all()
 
 
