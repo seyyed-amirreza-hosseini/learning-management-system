@@ -1,11 +1,16 @@
 from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth import get_user_model
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
+from notifications.tasks import send_assignment_reminder_email
 from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner
 from .filters import CourseFilter
+
+
+User = get_user_model()
 
 
 class CourseViewSet(ModelViewSet):
@@ -167,7 +172,22 @@ class AssignmentViewSet(ModelViewSet):
         if teacher not in lesson.module.course.instructors.all():
             raise PermissionDenied('You can only create assignments for your own courses.')
         
-        serializer.save()
+        assignment = serializer.save()
+
+        student_emails = User.objects.filter(
+            student__enrollments__course=lesson.module.course
+        ).values_list('email', flat=True)
+
+        if student_emails:
+            subject = f'New Assignment: {assignment.name}'
+            message = (
+                f'Dear Student,\n\n'
+                f'You have a new assignment for the lesson "{lesson.name}" in the course "{lesson.module.course.name}".\n'
+                f'Description: {assignment.description}\n'
+                f'Due Date: {assignment.due_date}\n\n'
+                f'Please make sure to submit your work on time.'
+            )
+            send_assignment_reminder_email.delay(subject, message, list(student_emails))
 
 
 class SubmissionViewSet(ModelViewSet):
