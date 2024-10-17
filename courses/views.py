@@ -85,7 +85,7 @@ class StudentViewSet(ModelViewSet):
 
         if user.is_authenticated:
             if user.is_staff:
-                return Student.objects.all()
+                return Student.objects.select_related('user').all()
             elif user.role == 'TE':
                 # Ensure we get the teacher instance
                 try:
@@ -94,9 +94,9 @@ class StudentViewSet(ModelViewSet):
                     raise ValidationError("Teacher with the give ID was not found")  # If the teacher is not found, return an empty queryset
 
                 # Return students enrolled in the teacher's courses
-                return Student.objects.filter(enrollments__course__instructors=teacher)     
+                return Student.objects.select_related('user').filter(enrollments__course__instructors=teacher)     
             elif user.role == 'ST':
-                return Student.objects.filter(id=user.id)
+                return Student.objects.select_related('user').filter(user_id=user.id)
         else:
             raise PermissionDenied("Method \"GET\" not allowed.") 
     
