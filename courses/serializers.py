@@ -76,7 +76,10 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         course_id = self.context['course_id']
         user_id = self.context['user_id']
         
-        return Review.objects.create(course_id=course_id, user_id=user_id, **validated_data)
+        try:
+            return Review.objects.create(course_id=course_id, user_id=user_id, **validated_data)
+        except IntegrityError:
+            raise ValidationError({"detail": "You have already submitted a review for this course."})
 
 
 class ModuleSerializer(serializers.ModelSerializer):
