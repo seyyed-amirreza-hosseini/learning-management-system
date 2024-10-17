@@ -104,29 +104,36 @@ class IsStudentEnrolledOrTeacherInstructor(BasePermission):
             return True
         
         elif request.user.is_authenticated:
-            if request.user.role == 'ST' or request.user.role == 'TE':
-                course_id = view.kwargs.get('course_id')
-
-                if not course_id:
+            course_id = view.kwargs.get('course_pk')
+            if not course_id:
+                return False
+            
+            if request.user.role == 'ST':
+            
+                try:
+                    student = Student.objects.get(user_id=request.user.id)
+                except Student.DoesNotExist:
                     return False
-
-                student = Student.objects.filter(user_id=request.user.id)
-
                 is_student_enrolled = Enrollment.objects.filter(
                     course_id=course_id,
                     student_id=student.id
                 ).exists()
 
-                teacher = Teacher.objects.filter(user_id=request.user.id)
-
+                return is_student_enrolled
+            
+            elif request.user.role == 'TE':
+                try:
+                    teacher = Teacher.objects.get(user_id=request.user.id)
+                except Teacher.DoesNotExist:
+                    return False
                 is_teacher_instructor = Course.objects.filter(
                     id=course_id,
                     instructors=teacher
                 ).exists()
+                
+                return is_teacher_instructor
         else:
             return False
-
-        return is_student_enrolled or is_teacher_instructor
 
 
 class IsStudentOrTeacherReviewOwner(BasePermission):
