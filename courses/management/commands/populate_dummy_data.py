@@ -83,12 +83,21 @@ class Command(BaseCommand):
 
     def create_dummy_reviews(self, students, courses, num_reviews=20):
         for _ in range(num_reviews):
-            Review.objects.create(
-                user=random.choice(students).user,
-                course=random.choice(courses),
-                comment='This is a sample review with meaningful content.',
-                rating=random.randint(1, 5)
-            )
+            user_email = random.choice(students)  # Assuming this is an email string
+            course = random.choice(courses)
+
+            # Fetch User instance by email
+            try:
+                user_instance = User.objects.get(email=user_email)  # Adjust based on your User model's email field
+            except User.DoesNotExist:
+                print(f"User with email {user_email} does not exist.")
+                continue  # Skip this iteration if user does not exist
+
+            # Check if review already exists
+            if not Review.objects.filter(user=user_instance, course=course).exists():
+                # Create your review
+                review = Review(user=user_instance, course=course, rating=random.randint(1, 5), comment="Dummy review.")
+                review.save()
 
     def create_dummy_modules(self, courses, num_modules=5):
         for course in courses:
@@ -151,15 +160,22 @@ class Command(BaseCommand):
                     lesson=lesson
                 )
 
-    def create_dummy_enrollments(self, students, courses, num_enrollments=10):
+    def create_dummy_enrollments(self, students, courses, num_enrollments=15):
         for _ in range(num_enrollments):
-            Enrollment.objects.create(
-                course=random.choice(courses),
-                student=random.choice(students),
-                progress=random.uniform(0, 100),
-                status=random.choice([Enrollment.Status.ACTIVE, Enrollment.Status.COMPLETED, Enrollment.Status.DROPPED]),
-                grade=random.uniform(0, 100) if random.choice([True, False]) else None
-            )
+            user_email = random.choice(students)
+            course = random.choice(courses)
+
+            try:
+                user_instance = User.objects.get(email=user_email)
+            except User.DoesNotExist:
+                print(f"User with email {user_email} does not exist.")
+                continue  # Skip if user does not exist
+
+            # Check if the enrollment already exists
+            if not Enrollment.objects.filter(user=user_instance, course=course).exists():
+                Enrollment.objects.create(user=user_instance, course=course)
+            else:
+                print(f"Enrollment for user {user_instance.email} in course {course.id} already exists.")
 
     def handle(self, *args, **options):
         students, teachers = self.create_dummy_users(num_students=10, num_teachers=5)
