@@ -14,7 +14,7 @@ djangorestframework-simplejwt = "*"
 django-filter = "*"
 celery = "*"
 redis = "*"
-django-celery-beat = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
