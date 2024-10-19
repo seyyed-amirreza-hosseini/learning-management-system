@@ -227,6 +227,7 @@ class Forum(models.Model):
 
 
 class Post(models.Model):
+    title = models.CharField(max_length=255)
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='posts')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
     content = models.TextField()
