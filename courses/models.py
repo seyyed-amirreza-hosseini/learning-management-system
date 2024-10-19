@@ -235,3 +235,13 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}'s post in {self.forum.title}"
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}'s comment in {self.post.title}"
