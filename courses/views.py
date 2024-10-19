@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError, PermissionDenied, MethodN
 from notifications.tasks import send_assignment_reminder_email
 from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner
 from .filters import CourseFilter
 
 
@@ -229,3 +229,13 @@ class SubmissionViewSet(ModelViewSet):
 class ForumViewSet(ModelViewSet):
     queryset = Forum.objects.all()
     serializer_class = ForumSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [AllowAny()]
+        elif self.request.method == 'POST':
+            return [IsAdminOrTeacher()]
+        elif self.request.method in ['PUT', 'PATCH']:
+            return [IsTeacherForumOwner()]
+        else:
+            return [IsAdminUser()]
