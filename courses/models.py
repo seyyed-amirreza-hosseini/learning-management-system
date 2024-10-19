@@ -215,3 +215,12 @@ class Submission(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['assignment', 'student'], name='unique_assignment_student')
         ]
+
+
+class Forum(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='forums')
+
+    def __str__(self):
+        return self.title
