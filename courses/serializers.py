@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission
+from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission, Forum
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -276,3 +276,9 @@ class AdminSubmissionCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You have already submitted this assignment.")
         
         return submission
+    
+
+class ForumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Forum
+        fields = ['id', 'title', 'description', 'course']

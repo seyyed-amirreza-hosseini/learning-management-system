@@ -4,8 +4,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from notifications.tasks import send_assignment_reminder_email
-from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer
+from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner
 from .filters import CourseFilter
 
@@ -224,3 +224,8 @@ class SubmissionViewSet(ModelViewSet):
             'assignment_id': self.kwargs['assignment_pk'],
             'student_id': student_id
         }
+
+
+class ForumViewSet(ModelViewSet):
+    queryset = Forum.objects.all()
+    serializer_class = ForumSerializer
