@@ -224,3 +224,13 @@ class Forum(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Post(models.Model):
+    forum = models.ForeignKey(Forum, on_delete=models.CASCADE, related_name='posts')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.first_name} {self.user.last_name}'s post in {self.forum.title}"
