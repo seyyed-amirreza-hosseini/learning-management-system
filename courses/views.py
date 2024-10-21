@@ -254,3 +254,6 @@ class PostViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {'forum_id': self.kwargs['forum_pk']}
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user) 
