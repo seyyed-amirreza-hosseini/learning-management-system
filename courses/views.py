@@ -237,5 +237,10 @@ class ForumViewSet(ModelViewSet):
             return [IsAdminOrTeacher()]
         elif self.request.method in ['PUT', 'PATCH']:
             return [IsTeacherForumOwner()]
-        else:
+        elif self.request.method == 'DELETE':
             return [IsAdminUser()]
+        
+        return super().get_permissions()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
