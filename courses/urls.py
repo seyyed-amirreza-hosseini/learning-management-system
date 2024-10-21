@@ -21,4 +21,7 @@ modules_router.register('lessons', views.LessonViewSet, basename='module-lessons
 assignment_router = routers.NestedDefaultRouter(router, 'assignments', lookup='assignment')
 assignment_router.register('submissions', views.SubmissionViewSet, basename='assignment-submissions')
 
+forum_router = routers.NestedDefaultRouter(router, 'forums', lookup='forum')
+forum_router.register('posts', views.PostViewSet, basename='forum-posts')
+
 urlpatterns = router.urls + courses_router.urls + modules_router.urls + assignment_router.urls
