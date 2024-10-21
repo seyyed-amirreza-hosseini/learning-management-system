@@ -285,6 +285,13 @@ class ForumSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Post
-        fields = ['id', 'title', 'user', 'content']
+        fields = ['id', 'title', 'user_id', 'content']
+
+    def create(self, validated_data):
+        forum_id = self.context['forum_id']
+
+        return Post.objects.create(forum_id=forum_id, **validated_data)
