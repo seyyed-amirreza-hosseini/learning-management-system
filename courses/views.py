@@ -246,6 +246,8 @@ class ForumViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class PostViewSet(ModuleViewSet):
-    queryset = Post.objects.all()
+class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
+
+    def get_queryset(self):
+        return Post.objects.filter(self.kwargs['forum_pk'])
