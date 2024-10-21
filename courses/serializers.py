@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission, Forum
+from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission, Forum, Post
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -282,3 +282,9 @@ class ForumSerializer(serializers.ModelSerializer):
     class Meta:
         model = Forum
         fields = ['id', 'title', 'description', 'course']
+
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id', 'title', 'user', 'content']
