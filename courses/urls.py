@@ -24,4 +24,4 @@ assignment_router.register('submissions', views.SubmissionViewSet, basename='ass
 forum_router = routers.NestedDefaultRouter(router, 'forums', lookup='forum')
 forum_router.register('posts', views.PostViewSet, basename='forum-posts')
 
-urlpatterns = router.urls + courses_router.urls + modules_router.urls + assignment_router.urls
+urlpatterns = router.urls + courses_router.urls + modules_router.urls + assignment_router.urls + forum_router.urls
