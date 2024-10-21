@@ -250,4 +250,7 @@ class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        return Post.objects.filter(self.kwargs['forum_pk'])
+        return Post.objects.filter(forum_id=self.kwargs['forum_pk'])
+
+    def get_serializer_context(self):
+        return {'forum_id': self.kwargs['forum_pk']}
