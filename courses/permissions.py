@@ -163,8 +163,19 @@ class IsTeacherForumOwner(BasePermission):
 
 class IsStudentOrTeacher(BasePermission):
     def has_permission(self, request, view):
-        return bool(
-            request.user and
-            request.user.is_authenticated and 
-            request.user.role == 'ST' or request.user.role == 'TE' or request.user.is_staff
-        )
+        if request.user.is_authenticated:
+            return bool(
+                request.user.role in ['ST', 'TE'] or request.user.is_staff
+            )
+        return False
+
+class IsPostOwner(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_staff:
+            return True
+        else:
+            return bool(
+                request.user and
+                request.user.is_authenticated and 
+                (request.user.role == 'ST' or request.user.role == 'TE') and obj.user == request.user
+            )
