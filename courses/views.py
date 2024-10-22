@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError, PermissionDenied, MethodN
 from notifications.tasks import send_assignment_reminder_email
 from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner
 from .filters import CourseFilter
 
 
@@ -255,5 +255,15 @@ class PostViewSet(ModelViewSet):
     def get_serializer_context(self):
         return {'forum_id': self.kwargs['forum_pk']}
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        elif self.request.method == 'POST':
+            return [IsStudentOrTeacher()]
+        elif self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsPostOwner()]
+
+        return super().get_permissions()
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user) 
