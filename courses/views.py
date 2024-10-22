@@ -232,7 +232,7 @@ class ForumViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.request.method == 'GET':
-            return [AllowAny()]
+            return [IsAuthenticated()]
         elif self.request.method == 'POST':
             return [IsAdminOrTeacher()]
         elif self.request.method in ['PUT', 'PATCH']:
