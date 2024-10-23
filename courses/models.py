@@ -129,6 +129,14 @@ class VideoLecture(models.Model):
         return self.title
 
 
+class UserActivityLog(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    action = models.CharField(max_length=255)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    duration = models.DurationField(null=True, blank=True)
+
+
 class Quiz(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='quizzes')
     title = models.CharField(max_length=255)
