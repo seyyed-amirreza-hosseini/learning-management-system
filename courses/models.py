@@ -140,6 +140,13 @@ class UserActivityLog(models.Model):
         return f"{self.user.first_name} {self.user.last_name} - {self.action} at {self.timestamp}"
 
 
+class UserCourseProgress(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    progress_percentage = models.FloatField(default=0)
+    last_accessed = models.DateTimeField(auto_now=True)
+
+
 class Quiz(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='quizzes')
     title = models.CharField(max_length=255)
