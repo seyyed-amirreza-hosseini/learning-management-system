@@ -173,14 +173,12 @@ class Choice(models.Model):
         return self.text
 
 
-class QuizSubmission(models.Model):
+class QuizAttempt(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.DecimalField(max_digits=5, decimal_places=2)
-
-    def __str__(self):
-        return f'Submission by {self.student.user.first_name} for quiz {self.quiz.title} with score {self.score}'
-
+    attempt_time = models.DateTimeField(auto_now=True)
+    
 
 class Assignment(models.Model):
     name = models.CharField(max_length=255)
