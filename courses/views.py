@@ -1,11 +1,13 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from notifications.tasks import send_assignment_reminder_email
-from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer
+from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post, UserCourseProgress, UserActivityLog, QuizAttempt
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer, UserActivityLogSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner
 from .filters import CourseFilter
 
@@ -267,3 +269,35 @@ class PostViewSet(ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user) 
+
+
+class AnalyticsViewSet(ViewSet):
+    @action(detail=True, methods=['get'])
+    def course_progress(self, request, pk=None):
+        progress = UserCourseProgress.objects.filter(
+            user=request.user, course_id=pk
+        ).first()
+        
+        if progress:
+            return Response({
+                'course_id': pk,
+                'progress_percentage': progress.progress_percentage,
+                'last_accessed': progress.last_accessed                
+            })
+        
+        return Response({"detail": "Progress not found"}, status=404)
+    
+    @action(detail=False, methods=['get'])
+    def user_activity(self, request):
+        logs = UserActivityLog.objects.filter(user=request.user)
+        serializer = UserActivityLogSerializer(logs, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def quiz_performance(self, request):
+        quiz_attempts = QuizAttempt.objects.filter(user=request.user)
+        total_score = quiz_attempts.aggregate(total=sum('score'))
+        return Response({
+            'total_score': total_score['total'],
+            'attempt_count': quiz_attempts.count(),
+        })
