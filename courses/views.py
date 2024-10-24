@@ -10,6 +10,7 @@ from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer, UserActivityLogSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner
 from .filters import CourseFilter
+from .utils import log_user_activity
 
 
 User = get_user_model()
@@ -26,6 +27,14 @@ class CourseViewSet(ModelViewSet):
             .prefetch_related('instructors__user', 'reviews') \
             .all()
 
+    def retrieve(self, request, *args, **kwargs):
+        course = self.get_object()
+
+        log_user_activity(user=request.user, action='view_course', course=course)
+
+        serializer = self.get_serializer(course)
+        return Response(serializer.data)
+ 
 
 class ReviewViewSet(ModelViewSet):
     def get_queryset(self):
