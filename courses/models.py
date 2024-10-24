@@ -129,10 +129,21 @@ class VideoLecture(models.Model):
         return self.title
 
 
+class Quiz(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='quizzes')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    passing_score = models.IntegerField(default=50)
+
+    def __str__(self):
+        return self.title
+    
+
 class UserActivityLog(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     action = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     duration = models.DurationField(null=True, blank=True)
 
@@ -145,16 +156,6 @@ class UserCourseProgress(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     progress_percentage = models.FloatField(default=0)
     last_accessed = models.DateTimeField(auto_now=True)
-
-
-class Quiz(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='quizzes')
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    passing_score = models.IntegerField(default=50)
-
-    def __str__(self):
-        return self.title
 
 
 class Question(models.Model):
