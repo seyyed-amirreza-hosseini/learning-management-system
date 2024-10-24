@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission, Forum, Post, UserActivityLog
+from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission, Forum, Post, UserActivityLog, Quiz
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -301,3 +301,9 @@ class UserActivityLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserActivityLog
         fields = ['id', 'user', 'action', 'timestamp']
+
+
+class QuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = ['id',  'title', 'lesson']
