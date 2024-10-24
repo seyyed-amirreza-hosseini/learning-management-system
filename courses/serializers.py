@@ -307,3 +307,13 @@ class QuizSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quiz
         fields = ['id',  'title', 'lesson']
+
+
+class QuizAnswerSerializer(serializers.Serializer):
+    question_id = serializers.IntegerField()
+    selected_option = serializers.IntegerField()
+
+
+class QuizSubmissionSerializer(serializers.Serializer):
+    answers = QuizAnswerSerializer(many=True)
+    duration = serializers.IntegerField(required=False)
