@@ -138,6 +138,19 @@ class Quiz(models.Model):
     def __str__(self):
         return self.title
     
+    def get_correct_answers(self):
+        """
+        Returns a dictionary of correct answers for each question in the quiz.
+        Example format: {question_id: correct_option_id}
+        """
+        correct_answers = {}
+        for question in self.questions.all():
+            correct_choice = question.choices.filter(is_correct=True).first()
+            if correct_choice:
+                correct_answers[question.id] = correct_choice.id
+
+        return correct_answers
+    
 
 class UserActivityLog(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -164,6 +177,7 @@ class Question(models.Model):
 
     def __str__(self):
         return self.text
+
 
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
