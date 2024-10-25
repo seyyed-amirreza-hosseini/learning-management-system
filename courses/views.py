@@ -311,3 +311,62 @@ class AnalyticsViewSet(ViewSet):
             'total_score': total_score['total'],
             'attempt_count': quiz_attempts.count(),
         })
+
+
+class QuizViewSet(ModelViewSet):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+
+    def grade_quiz(self, quiz, user_answers):
+        """
+        Grades the quiz based on the user's answers.
+        """
+        correct_answers = quiz.get_correct_answers()
+        score = 0
+
+        for user_answer in user_answers:
+            question_id = user_answer['question_id']
+            selected_option = user_answer['selected_option']
+            correct_option = correct_answers.get(question_id)
+
+            if selected_option == correct_option:
+                score += 1
+
+        return score
+            
+    @action(detail=True, methods=['post'])
+    def complete_quiz(self, request, pk=None):
+        """
+        Endpoint for users to complete a quiz.
+        """
+        quiz = self.get_object()
+        user = request.user
+
+        serializer = QuizSubmissionSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        user_answers = serializer.validated_data['answers']
+        duration = serializer.validated_data.get('duration', None)
+
+        score = self.grade_quiz(quiz, user_answers)
+        
+        log_user_activity(user=user,
+            action='complete quiz', 
+            quiz=quiz, 
+            details=f'Score: {score}', 
+            duration=duration
+        )
+
+        quiz_attempt = QuizAttempt.objects.create(
+            user=user,
+            quiz=quiz,
+            score=score
+        )
+
+        return Response({
+            "message": "Quiz completed",
+            "score": score,
+            "attempt_id": quiz_attempt.id},
+            status=status.HTTP_200_OK
+        )
