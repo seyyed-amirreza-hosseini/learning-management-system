@@ -4,7 +4,7 @@ from django.db.models.query import QuerySet
 from django.http import HttpRequest
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
-from .models import Forum, Student, Teacher, Course, Review, Module, Lesson, Enrollment, Assignment, Submission, InstructorCourse
+from .models import Forum, Student, Teacher, Course, Review, Module, Lesson, Enrollment, Assignment, Submission, InstructorCourse, UserCourseProgress
 
 
 @admin.register(Course)
@@ -124,3 +124,8 @@ class SubmissionAdmin(admin.ModelAdmin):
 @admin.register(Forum)
 class ForumAdmin(admin.ModelAdmin):
     list_display = ['title', 'description', 'course', 'user']
+
+
+@admin.register(UserCourseProgress)
+class UserCourseProgressAdmin(admin.ModelAdmin):
+    list_display = ['user', 'course', 'progress_percentage', 'last_accessed']
