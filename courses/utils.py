@@ -1,7 +1,7 @@
 from .models import UserActivityLog
 
 
-def log_user_activity(user, action, course=None, quiz=None, details=None):
+def log_user_activity(user, action, course=None, quiz=None, details=None, duration=None):
     """
     Logs a user activity with optional course and additional.
     """
@@ -10,6 +10,7 @@ def log_user_activity(user, action, course=None, quiz=None, details=None):
         action=action,
         course=course,
         quiz=quiz,
-        details=details
+        details=details,
+        duration=duration
     )
     
