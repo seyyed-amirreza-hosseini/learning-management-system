@@ -282,6 +282,16 @@ class PostViewSet(ModelViewSet):
 
 
 class AnalyticsViewSet(ViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request):
+        """
+        Handle GET requests to the base analytics URL.
+        """
+        return Response({
+            "message": "Welcome to the Analytics API. Use specific endpoints like /completion_rate for data."
+        })
+    
     @action(detail=True, methods=['get'])
     def course_progress(self, request, pk=None):
         progress = UserCourseProgress.objects.filter(
@@ -290,7 +300,7 @@ class AnalyticsViewSet(ViewSet):
         
         if progress:
             return Response({
-                'course_id': pk,
+                'course_id': int(pk),
                 'progress_percentage': progress.progress_percentage,
                 'last_accessed': progress.last_accessed                
             })
