@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
-from django.db.models import Sum
+from django.db.models import Sum, Avg
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -296,6 +296,15 @@ class AnalyticsViewSet(ViewSet):
             })
         
         return Response({"detail": "Progress not found"}, status=404)
+    
+    @action(detail=True, methods=['get'])
+    def completion_rate(self, request, pk=None):
+        """
+        Calculate and return the average completion rate for a specific course.
+        """
+        average_progress = UserCourseProgress.objects.filter(course_id=pk).aggregate(avg_progress=Avg('progress_percentage'))
+
+        return Response({'average_completion_rate': average_progress['avg_progress']})
     
     @action(detail=False, methods=['get'])
     def user_activity(self, request):
