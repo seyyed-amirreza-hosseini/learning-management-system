@@ -15,6 +15,7 @@ django-filter = "*"
 celery = "*"
 redis = "*"
 psycopg2-binary = "*"
+django-celery-beat = "*"
 
 [dev-packages]
 
