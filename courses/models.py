@@ -170,6 +170,11 @@ class UserCourseProgress(models.Model):
     progress_percentage = models.FloatField(default=0)
     last_accessed = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'course'], name='unique_user_course_progress')
+        ]
+
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
