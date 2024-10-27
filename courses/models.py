@@ -289,3 +289,9 @@ class LiveClass(models.Model):
     start_time = models.DateTimeField()
     zoom_meeting_id = models.CharField(max_length=255)
     meeting_link = models.URLField()
+
+
+class Atendee(models.Model):
+    live_class = models.ForeignKey(LiveClass, on_delete=models.PROTECT, related_name='attendees')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(auto_now_add=True) 
