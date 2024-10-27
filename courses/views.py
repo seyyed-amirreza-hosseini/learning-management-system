@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Sum, Avg
+from django.http import StreamingHttpResponse
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -12,10 +13,25 @@ from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, T
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner
 from .filters import CourseFilter
 from .utils import log_user_activity
+import csv
 
 
 User = get_user_model()
 
+
+def generate_csv_report(request):
+    rows = UserCourseProgress.objects.all().values_list('user__email', 'course__name', 'progress_percentage')
+    response = StreamingHttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="progress_report.csv"'},
+    )
+
+    writer = csv.writer(response)
+    writer.writerow(['Email', 'Course Name', 'Progress Percentage'])
+    for row in rows:
+        writer.writerow(row)
+
+    return response
 
 class CourseViewSet(ModelViewSet):
     serializer_class = CourseSerializer
