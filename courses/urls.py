@@ -26,3 +26,6 @@ forum_router = routers.NestedDefaultRouter(router, 'forums', lookup='forum')
 forum_router.register('posts', views.PostViewSet, basename='forum-posts')
 
 urlpatterns = router.urls + courses_router.urls + modules_router.urls + assignment_router.urls + forum_router.urls
+urlpatterns += [
+    path('generate_csv_report', views.generate_csv_report, name='generate_csv_report'),
+]
