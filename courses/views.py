@@ -19,19 +19,26 @@ import csv
 User = get_user_model()
 
 
-def generate_csv_report(request):
+# Helper generator function to yield CSV rows
+def generate_csv_data():
+    # Header row
+    yield ['Email', 'Course Name', 'Progress Percentage']
+    
+    # Data rows
     rows = UserCourseProgress.objects.all().values_list('user__email', 'course__name', 'progress_percentage')
-    response = StreamingHttpResponse(
-        content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename="progress_report.csv"'},
-    )
-
-    writer = csv.writer(response)
-    writer.writerow(['Email', 'Course Name', 'Progress Percentage'])
     for row in rows:
-        writer.writerow(row)
+        yield row
 
+def generate_csv_report(request):
+    # Create a StreamingHttpResponse with CSV content type
+    response = StreamingHttpResponse(
+        (",".join(map(str, row)) + "\n" for row in generate_csv_data()),  # Generate each line as a CSV row
+        content_type="text/csv",
+    )
+    response['Content-Disposition'] = 'attachment; filename="progress_report.csv"'
+    
     return response
+
 
 class CourseViewSet(ModelViewSet):
     serializer_class = CourseSerializer
