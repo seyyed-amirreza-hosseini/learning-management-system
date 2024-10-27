@@ -282,3 +282,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}'s comment in {self.post.title}"
+    
+
+class LiveClass(models.Model):
+    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='hosted_classes')
+    start_time = models.DateTimeField()
+    zoom_meeting_id = models.CharField(max_length=255)
+    meeting_link = models.URLField()
