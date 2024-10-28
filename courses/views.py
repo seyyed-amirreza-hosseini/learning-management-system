@@ -2,17 +2,19 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Sum, Avg
 from django.http import StreamingHttpResponse
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from notifications.tasks import send_assignment_reminder_email
-from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post, UserCourseProgress, UserActivityLog, Quiz, QuizAttempt, LiveClass
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer, UserActivityLogSerializer, QuizSerializer, QuizAnswerSerializer, QuizSubmissionSerializer, LiveClassSerializer
+from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post, UserCourseProgress, UserActivityLog, Quiz, QuizAttempt, Meeting
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer, UserActivityLogSerializer, QuizSerializer, QuizAnswerSerializer, QuizSubmissionSerializer, MeetingSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner
 from .filters import CourseFilter
 from .utils import log_user_activity
+from .zoom_utils import create_meeting
 import csv
 import requests
 
@@ -415,6 +417,29 @@ class QuizViewSet(ModelViewSet):
         )
     
 
-class LiveClassViewSet(ModelViewSet):
-    queryset = LiveClass.objects.all()
-    serializer_class = LiveClassSerializer
+class MeetingViewSet(ModelViewSet):
+    queryset = Meeting.objects.all()
+    serializer_class = MeetingSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+
+        host = request.user
+        topic = validated_data['topic']
+        start_time = validated_data['start_time']
+
+
+        zoom_meeting = create_meeting(topic, start_time)
+
+        meeting = Meeting.objects.create(
+            host=host,
+            topic=topic,
+            start_time=start_time,
+            meeting_id=zoom_meeting['id'],
+            meeting_link=zoom_meeting['meeting_link']
+        )
+        
+        response_serializer = self.get_serializer(meeting)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
