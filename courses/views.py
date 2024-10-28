@@ -8,12 +8,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied, MethodNotAllowed
 from notifications.tasks import send_assignment_reminder_email
-from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post, UserCourseProgress, UserActivityLog, Quiz, QuizAttempt
-from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer, UserActivityLogSerializer, QuizSerializer, QuizAnswerSerializer, QuizSubmissionSerializer
+from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post, UserCourseProgress, UserActivityLog, Quiz, QuizAttempt, LiveClass
+from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer, UserActivityLogSerializer, QuizSerializer, QuizAnswerSerializer, QuizSubmissionSerializer, LiveClassSerializer
 from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner
 from .filters import CourseFilter
 from .utils import log_user_activity
 import csv
+import requests
 
 
 User = get_user_model()
@@ -412,3 +413,8 @@ class QuizViewSet(ModelViewSet):
             "attempt_id": quiz_attempt.id},
             status=status.HTTP_200_OK
         )
+    
+
+class LiveClassViewSet(ModelViewSet):
+    queryset = LiveClass.objects.all()
+    serializer_class = LiveClassSerializer
