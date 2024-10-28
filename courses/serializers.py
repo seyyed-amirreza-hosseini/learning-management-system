@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission, Forum, Post, UserActivityLog, Quiz, LiveClass
+from .models import Course, Review, Teacher, Module, Lesson, Student, Enrollment, Assignment, Submission, Forum, Post, UserActivityLog, Quiz, Meeting
 
 
 class TeacherSerializer(serializers.ModelSerializer):
@@ -319,7 +319,7 @@ class QuizSubmissionSerializer(serializers.Serializer):
     duration = serializers.IntegerField(required=False)
 
 
-class LiveClassSerializer(serializers.ModelSerializer):
+class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LiveClass
+        model = Meeting
         fields = "__all__"
