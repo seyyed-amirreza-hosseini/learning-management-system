@@ -284,14 +284,15 @@ class Comment(models.Model):
         return f"{self.user.first_name} {self.user.last_name}'s comment in {self.post.title}"
     
 
-class LiveClass(models.Model):
-    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='hosted_classes')
+class Meeting(models.Model):
+    host = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='meetings')
+    topic = models.CharField(max_length=255)
     start_time = models.DateTimeField()
-    zoom_meeting_id = models.CharField(max_length=255)
+    meeting_id = models.CharField(max_length=255, unique=True)
     meeting_link = models.URLField()
 
 
 class Atendee(models.Model):
-    live_class = models.ForeignKey(LiveClass, on_delete=models.PROTECT, related_name='attendees')
+    meeting = models.ForeignKey(Meeting, on_delete=models.PROTECT, related_name='attendees')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     joined_at = models.DateTimeField(auto_now_add=True) 
