@@ -11,7 +11,7 @@ from rest_framework.exceptions import ValidationError, PermissionDenied, MethodN
 from notifications.tasks import send_assignment_reminder_email
 from .models import Course, Review, Module, Lesson, Teacher, Student, Enrollment, Assignment, Submission, Forum, Post, UserCourseProgress, UserActivityLog, Quiz, QuizAttempt, Meeting
 from .serializers import CourseSerializer, ModuleSerializer, LessonSerializer, TeacherSerializer, StudentSerializer, EnrollmentSerializer, EnrollmentCreateSerializer, AssignmentSerializer, AssignmentCreateSerializer, SubmissionSerializer, StudentSubmissionCreateSerializer, AdminSubmissionCreateSerializer, ReviewSerializer, ReviewCreateSerializer, ForumSerializer, PostSerializer, UserActivityLogSerializer, QuizSerializer, QuizAnswerSerializer, QuizSubmissionSerializer, MeetingSerializer
-from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner
+from .permissions import IsAdminOrTeacher, IsAdminOrOwnTeacher, IsAdminOrStudentOwner, IsStudentAndSubmissionOwner, IsStudentEnrolledOrTeacherInstructor, IsStudentOrTeacherReviewOwner, IsTeacherForumOwner, IsStudentOrTeacher, IsPostOwner, IsMeetingOwner
 from .filters import CourseFilter
 from .utils import log_user_activity
 from .zoom_utils import create_meeting
@@ -421,7 +421,15 @@ class QuizViewSet(ModelViewSet):
 class MeetingViewSet(ModelViewSet):
     queryset = Meeting.objects.all()
     serializer_class = MeetingSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}    
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsMeetingOwner()] 
+        else:
+            return [IsAuthenticated()]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -450,5 +458,3 @@ class MeetingViewSet(ModelViewSet):
             logging.error(e)
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
-    def get_serializer_context(self):
-        return {'user_id': self.request.user.id}    
