@@ -17,6 +17,7 @@ from .utils import log_user_activity
 from .zoom_utils import create_meeting
 import csv
 import requests
+import logging
 
 
 User = get_user_model()
@@ -420,26 +421,31 @@ class QuizViewSet(ModelViewSet):
 class MeetingViewSet(ModelViewSet):
     queryset = Meeting.objects.all()
     serializer_class = MeetingSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
 
-        host = request.user
         topic = validated_data['topic']
         start_time = validated_data['start_time']
+        host = request.user  # Get the authenticated user
 
-
-        zoom_meeting = create_meeting(topic, start_time)
-
-        meeting = Meeting.objects.create(
-            host=host,
-            topic=topic,
-            start_time=start_time,
-            meeting_id=zoom_meeting['id'],
-            meeting_link=zoom_meeting['meeting_link']
-        )
-        
-        response_serializer = self.get_serializer(meeting)
-        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        try:
+            # Attempt to create a Zoom meeting
+            zoom_meeting = create_meeting(topic, start_time)
+            logging.info("Zoom meeting created successfully")
+            
+            # Save the meeting to the database
+            meeting = Meeting.objects.create(
+                host=host,
+                topic=topic,
+                start_time=start_time,
+                meeting_link=zoom_meeting['join_url']
+            )
+            response_serializer = self.get_serializer(meeting)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            logging.error(e)
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
