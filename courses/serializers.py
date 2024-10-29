@@ -320,6 +320,13 @@ class QuizSubmissionSerializer(serializers.Serializer):
 
 
 class MeetingSerializer(serializers.ModelSerializer):
+    meeting_link = serializers.URLField(read_only=True)
+
     class Meta:
         model = Meeting
-        fields = "__all__"
+        fields = ['id', 'topic', 'start_time', 'meeting_link']
+
+    def create(self, validated_data):
+        user_id = self.context['user_id']
+
+        return Meeting.objects.create(host_id=user_id, **validated_data)
