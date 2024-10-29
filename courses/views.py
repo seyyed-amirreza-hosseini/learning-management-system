@@ -449,3 +449,6 @@ class MeetingViewSet(ModelViewSet):
         except Exception as e:
             logging.error(e)
             return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+    def get_serializer_context(self):
+        return {'user_id': self.request.user.id}    
