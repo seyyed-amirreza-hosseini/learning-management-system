@@ -1,0 +1,3244 @@
+openapi: 3.0.3
+info:
+  title: LMS
+  version: 0.0.0
+paths:
+  /apis/analytics/:
+    get:
+      operationId: apis_analytics_retrieve
+      description: Handle GET requests to the base analytics URL.
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /apis/analytics/{id}/completion_rate/:
+    get:
+      operationId: apis_analytics_completion_rate_retrieve
+      description: Calculate and return the average completion rate for a specific
+        course.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /apis/analytics/{id}/course_progress/:
+    get:
+      operationId: apis_analytics_course_progress_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /apis/analytics/quiz_performance/:
+    get:
+      operationId: apis_analytics_quiz_performance_retrieve
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /apis/analytics/user_activity/:
+    get:
+      operationId: apis_analytics_user_activity_retrieve
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          description: No response body
+  /apis/assignments/:
+    get:
+      operationId: apis_assignments_list
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assignment'
+          description: ''
+    post:
+      operationId: apis_assignments_create
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssignmentCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssignmentCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentCreate'
+          description: ''
+  /apis/assignments/{assignment_pk}/submissions/:
+    get:
+      operationId: apis_assignments_submissions_list
+      parameters:
+      - in: path
+        name: assignment_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Submission'
+          description: ''
+    post:
+      operationId: apis_assignments_submissions_create
+      parameters:
+      - in: path
+        name: assignment_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          description: No response body
+  /apis/assignments/{assignment_pk}/submissions/{id}/:
+    get:
+      operationId: apis_assignments_submissions_retrieve
+      parameters:
+      - in: path
+        name: assignment_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+          description: ''
+    put:
+      operationId: apis_assignments_submissions_update
+      parameters:
+      - in: path
+        name: assignment_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Submission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Submission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Submission'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+          description: ''
+    patch:
+      operationId: apis_assignments_submissions_partial_update
+      parameters:
+      - in: path
+        name: assignment_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedSubmission'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedSubmission'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedSubmission'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+          description: ''
+    delete:
+      operationId: apis_assignments_submissions_destroy
+      parameters:
+      - in: path
+        name: assignment_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/assignments/{id}/:
+    get:
+      operationId: apis_assignments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+    put:
+      operationId: apis_assignments_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Assignment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+    patch:
+      operationId: apis_assignments_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAssignment'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+          description: ''
+    delete:
+      operationId: apis_assignments_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/courses/:
+    get:
+      operationId: apis_courses_list
+      parameters:
+      - in: query
+        name: level
+        schema:
+          type: string
+          enum:
+          - AD
+          - BE
+          - IN
+        description: |-
+          * `BE` - Beginner
+          * `IN` - Intermediate
+          * `AD` - Advanced
+      - in: query
+        name: price__gt
+        schema:
+          type: number
+      - in: query
+        name: price__lt
+        schema:
+          type: number
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+          description: ''
+    post:
+      operationId: apis_courses_create
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Course'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Course'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+  /apis/courses/{course_pk}/modules/:
+    get:
+      operationId: apis_courses_modules_list
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Module'
+          description: ''
+    post:
+      operationId: apis_courses_modules_create
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Module'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Module'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Module'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+  /apis/courses/{course_pk}/modules/{module_pk}/lessons/:
+    get:
+      operationId: apis_courses_modules_lessons_list
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: module_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lesson'
+          description: ''
+    post:
+      operationId: apis_courses_modules_lessons_create
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: module_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+  /apis/courses/{course_pk}/modules/{module_pk}/lessons/{id}/:
+    get:
+      operationId: apis_courses_modules_lessons_retrieve
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: module_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    put:
+      operationId: apis_courses_modules_lessons_update
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: module_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Lesson'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    patch:
+      operationId: apis_courses_modules_lessons_partial_update
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: module_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedLesson'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedLesson'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedLesson'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lesson'
+          description: ''
+    delete:
+      operationId: apis_courses_modules_lessons_destroy
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: module_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/courses/{course_pk}/modules/{id}/:
+    get:
+      operationId: apis_courses_modules_retrieve
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+    put:
+      operationId: apis_courses_modules_update
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Module'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Module'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Module'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+    patch:
+      operationId: apis_courses_modules_partial_update
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedModule'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedModule'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedModule'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Module'
+          description: ''
+    delete:
+      operationId: apis_courses_modules_destroy
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/courses/{course_pk}/reviews/:
+    get:
+      operationId: apis_courses_reviews_list
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+          description: ''
+    post:
+      operationId: apis_courses_reviews_create
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewCreate'
+          description: ''
+  /apis/courses/{course_pk}/reviews/{id}/:
+    get:
+      operationId: apis_courses_reviews_retrieve
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+    put:
+      operationId: apis_courses_reviews_update
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Review'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Review'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+    patch:
+      operationId: apis_courses_reviews_partial_update
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReview'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReview'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReview'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+          description: ''
+    delete:
+      operationId: apis_courses_reviews_destroy
+      parameters:
+      - in: path
+        name: course_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/courses/{id}/:
+    get:
+      operationId: apis_courses_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    put:
+      operationId: apis_courses_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Course'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Course'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    patch:
+      operationId: apis_courses_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCourse'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+          description: ''
+    delete:
+      operationId: apis_courses_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this course.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/enrollments/:
+    get:
+      operationId: apis_enrollments_list
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Enrollment'
+          description: ''
+    post:
+      operationId: apis_enrollments_create
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/EnrollmentCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/EnrollmentCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrollmentCreate'
+          description: ''
+  /apis/enrollments/{id}/:
+    get:
+      operationId: apis_enrollments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+          description: ''
+    put:
+      operationId: apis_enrollments_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Enrollment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Enrollment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Enrollment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+          description: ''
+    patch:
+      operationId: apis_enrollments_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedEnrollment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedEnrollment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedEnrollment'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enrollment'
+          description: ''
+    delete:
+      operationId: apis_enrollments_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/forums/:
+    get:
+      operationId: apis_forums_list
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Forum'
+          description: ''
+    post:
+      operationId: apis_forums_create
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Forum'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Forum'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Forum'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forum'
+          description: ''
+  /apis/forums/{forum_pk}/posts/:
+    get:
+      operationId: apis_forums_posts_list
+      parameters:
+      - in: path
+        name: forum_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+          description: ''
+    post:
+      operationId: apis_forums_posts_create
+      parameters:
+      - in: path
+        name: forum_pk
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+  /apis/forums/{forum_pk}/posts/{id}/:
+    get:
+      operationId: apis_forums_posts_retrieve
+      parameters:
+      - in: path
+        name: forum_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    put:
+      operationId: apis_forums_posts_update
+      parameters:
+      - in: path
+        name: forum_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Post'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    patch:
+      operationId: apis_forums_posts_partial_update
+      parameters:
+      - in: path
+        name: forum_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPost'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+    delete:
+      operationId: apis_forums_posts_destroy
+      parameters:
+      - in: path
+        name: forum_pk
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/forums/{id}/:
+    get:
+      operationId: apis_forums_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this forum.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forum'
+          description: ''
+    put:
+      operationId: apis_forums_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this forum.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Forum'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Forum'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Forum'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forum'
+          description: ''
+    patch:
+      operationId: apis_forums_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this forum.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedForum'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedForum'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedForum'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forum'
+          description: ''
+    delete:
+      operationId: apis_forums_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this forum.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/meetings/:
+    get:
+      operationId: apis_meetings_list
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Meeting'
+          description: ''
+    post:
+      operationId: apis_meetings_create
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Meeting'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Meeting'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Meeting'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+          description: ''
+  /apis/meetings/{id}/:
+    get:
+      operationId: apis_meetings_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this meeting.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+          description: ''
+    put:
+      operationId: apis_meetings_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this meeting.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Meeting'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Meeting'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Meeting'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+          description: ''
+    patch:
+      operationId: apis_meetings_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this meeting.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMeeting'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMeeting'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMeeting'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+          description: ''
+    delete:
+      operationId: apis_meetings_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this meeting.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/students/:
+    get:
+      operationId: apis_students_list
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+          description: ''
+    post:
+      operationId: apis_students_create
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Student'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Student'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+  /apis/students/{id}/:
+    get:
+      operationId: apis_students_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    put:
+      operationId: apis_students_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Student'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Student'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    patch:
+      operationId: apis_students_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedStudent'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedStudent'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedStudent'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+          description: ''
+    delete:
+      operationId: apis_students_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /apis/teachers/:
+    get:
+      operationId: apis_teachers_list
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Teacher'
+          description: ''
+    post:
+      operationId: apis_teachers_create
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+  /apis/teachers/{id}/:
+    get:
+      operationId: apis_teachers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this teacher.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+    put:
+      operationId: apis_teachers_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this teacher.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Teacher'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+    patch:
+      operationId: apis_teachers_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this teacher.
+        required: true
+      tags:
+      - apis
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTeacher'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTeacher'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTeacher'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+          description: ''
+    delete:
+      operationId: apis_teachers_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this teacher.
+        required: true
+      tags:
+      - apis
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /auth/jwt/create/:
+    post:
+      operationId: auth_jwt_create_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /auth/jwt/refresh/:
+    post:
+      operationId: auth_jwt_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /auth/jwt/verify/:
+    post:
+      operationId: auth_jwt_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenVerify'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenVerify'
+          description: ''
+  /auth/users/:
+    get:
+      operationId: auth_users_list
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+    post:
+      operationId: auth_users_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCreate'
+          description: ''
+  /auth/users/{id}/:
+    get:
+      operationId: auth_users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: auth_users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: auth_users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: auth_users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this user.
+        required: true
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /auth/users/activation/:
+    post:
+      operationId: auth_users_activation_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Activation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Activation'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Activation'
+          description: ''
+  /auth/users/me/:
+    get:
+      operationId: auth_users_me_retrieve
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: auth_users_me_update
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: auth_users_me_partial_update
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: auth_users_me_destroy
+      tags:
+      - auth
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /auth/users/resend_activation/:
+    post:
+      operationId: auth_users_resend_activation_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /auth/users/reset_email/:
+    post:
+      operationId: auth_users_reset_email_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /auth/users/reset_email_confirm/:
+    post:
+      operationId: auth_users_reset_email_confirm_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UsernameResetConfirm'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsernameResetConfirm'
+          description: ''
+  /auth/users/reset_password/:
+    post:
+      operationId: auth_users_reset_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SendEmailReset'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendEmailReset'
+          description: ''
+  /auth/users/reset_password_confirm/:
+    post:
+      operationId: auth_users_reset_password_confirm_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordResetConfirm'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordResetConfirm'
+          description: ''
+  /auth/users/set_email/:
+    post:
+      operationId: auth_users_set_email_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetUsername'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetUsername'
+          description: ''
+  /auth/users/set_password/:
+    post:
+      operationId: auth_users_set_password_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/SetPassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/SetPassword'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPassword'
+          description: ''
+components:
+  schemas:
+    Activation:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+      required:
+      - token
+      - uid
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        due_date:
+          type: string
+          format: date-time
+        course_name:
+          type: string
+          readOnly: true
+        module_name:
+          type: string
+          readOnly: true
+        lesson:
+          allOf:
+          - $ref: '#/components/schemas/Lesson'
+          readOnly: true
+      required:
+      - course_name
+      - description
+      - due_date
+      - id
+      - lesson
+      - module_name
+      - name
+    AssignmentCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        due_date:
+          type: string
+          format: date-time
+        lesson_id:
+          type: integer
+      required:
+      - description
+      - due_date
+      - id
+      - lesson_id
+      - name
+    ContentTypeEnum:
+      enum:
+      - video
+      - article
+      - quiz
+      - assignment
+      - presentation
+      - image
+      - audio
+      - live_session
+      - pdf
+      type: string
+      description: |-
+        * `video` - Video
+        * `article` - Article/Text
+        * `quiz` - Quiz
+        * `assignment` - Assignment
+        * `presentation` - Presentation
+        * `image` - Image
+        * `audio` - Audio
+        * `live_session` - Live Session
+        * `pdf` - PDF
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        category:
+          type: string
+          maxLength: 255
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+        average_rating:
+          type: string
+          readOnly: true
+        instructors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Teacher'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - average_rating
+      - category
+      - description
+      - id
+      - instructors
+      - name
+      - updated_at
+    Enrollment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        course:
+          $ref: '#/components/schemas/SimpleCourse'
+        student:
+          $ref: '#/components/schemas/SimpleStudent'
+        enrollment_date:
+          type: string
+          format: date
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+      required:
+      - course
+      - enrollment_date
+      - id
+      - student
+    EnrollmentCreate:
+      type: object
+      properties:
+        course_id:
+          type: integer
+        student_id:
+          type: integer
+      required:
+      - course_id
+      - student_id
+    Forum:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        course:
+          type: integer
+      required:
+      - course
+      - id
+      - title
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        content_type:
+          $ref: '#/components/schemas/ContentTypeEnum'
+        content:
+          type: string
+        order:
+          type: integer
+          maximum: 32767
+          minimum: 1
+        duration:
+          type: string
+          nullable: true
+        is_published:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        resources:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - content
+      - content_type
+      - id
+      - is_published
+      - name
+      - order
+      - updated_at
+    LevelEnum:
+      enum:
+      - BE
+      - IN
+      - AD
+      type: string
+      description: |-
+        * `BE` - Beginner
+        * `IN` - Intermediate
+        * `AD` - Advanced
+    Meeting:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        topic:
+          type: string
+          maxLength: 255
+        start_time:
+          type: string
+          format: date-time
+        meeting_link:
+          type: string
+          format: uri
+          readOnly: true
+      required:
+      - id
+      - meeting_link
+      - start_time
+      - topic
+    Module:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        order:
+          type: integer
+          maximum: 32767
+          minimum: 1
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - description
+      - id
+      - name
+      - order
+      - updated_at
+    PasswordResetConfirm:
+      type: object
+      properties:
+        uid:
+          type: string
+        token:
+          type: string
+        new_password:
+          type: string
+      required:
+      - new_password
+      - token
+      - uid
+    PatchedAssignment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        due_date:
+          type: string
+          format: date-time
+        course_name:
+          type: string
+          readOnly: true
+        module_name:
+          type: string
+          readOnly: true
+        lesson:
+          allOf:
+          - $ref: '#/components/schemas/Lesson'
+          readOnly: true
+    PatchedCourse:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        category:
+          type: string
+          maxLength: 255
+        level:
+          $ref: '#/components/schemas/LevelEnum'
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+        average_rating:
+          type: string
+          readOnly: true
+        instructors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Teacher'
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedEnrollment:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        course:
+          $ref: '#/components/schemas/SimpleCourse'
+        student:
+          $ref: '#/components/schemas/SimpleStudent'
+        enrollment_date:
+          type: string
+          format: date
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+    PatchedForum:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        course:
+          type: integer
+    PatchedLesson:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        content_type:
+          $ref: '#/components/schemas/ContentTypeEnum'
+        content:
+          type: string
+        order:
+          type: integer
+          maximum: 32767
+          minimum: 1
+        duration:
+          type: string
+          nullable: true
+        is_published:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        resources:
+          type: string
+          format: uri
+          nullable: true
+    PatchedMeeting:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        topic:
+          type: string
+          maxLength: 255
+        start_time:
+          type: string
+          format: date-time
+        meeting_link:
+          type: string
+          format: uri
+          readOnly: true
+    PatchedModule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        order:
+          type: integer
+          maximum: 32767
+          minimum: 1
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedPost:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        user_id:
+          type: integer
+          readOnly: true
+        content:
+          type: string
+    PatchedReview:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        comment:
+          type: string
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 0
+    PatchedStudent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        user_id:
+          type: integer
+        major:
+          type: string
+          maxLength: 100
+    PatchedSubmission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        student:
+          allOf:
+          - $ref: '#/components/schemas/SimpleStudent'
+          readOnly: true
+        submitted_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        file:
+          type: string
+          format: uri
+          nullable: true
+          pattern: (?:pdf|rar)$
+    PatchedTeacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        user_id:
+          type: integer
+        department:
+          type: string
+          maxLength: 255
+    PatchedUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        user_id:
+          type: integer
+          readOnly: true
+        content:
+          type: string
+      required:
+      - content
+      - id
+      - title
+      - user_id
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        comment:
+          type: string
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 0
+      required:
+      - comment
+      - full_name
+      - id
+    ReviewCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        comment:
+          type: string
+        rating:
+          type: integer
+          maximum: 5
+          minimum: 0
+      required:
+      - comment
+      - id
+    SendEmailReset:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+      - email
+    SetPassword:
+      type: object
+      properties:
+        new_password:
+          type: string
+        current_password:
+          type: string
+      required:
+      - current_password
+      - new_password
+    SetUsername:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_email:
+          type: string
+          format: email
+          title: Email
+          maxLength: 254
+      required:
+      - current_password
+      - new_email
+    SimpleCourse:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        category:
+          type: string
+          maxLength: 255
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+          nullable: true
+      required:
+      - category
+      - id
+      - name
+    SimpleStudent:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        major:
+          type: string
+          maxLength: 100
+      required:
+      - full_name
+      - id
+    StatusEnum:
+      enum:
+      - active
+      - completed
+      - dropped
+      type: string
+      description: |-
+        * `active` - Active
+        * `completed` - Completed
+        * `dropped` - Dropped
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        user_id:
+          type: integer
+        major:
+          type: string
+          maxLength: 100
+      required:
+      - full_name
+      - id
+      - user_id
+    Submission:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        student:
+          allOf:
+          - $ref: '#/components/schemas/SimpleStudent'
+          readOnly: true
+        submitted_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        file:
+          type: string
+          format: uri
+          nullable: true
+          pattern: (?:pdf|rar)$
+      required:
+      - id
+      - student
+      - submitted_at
+      - updated_at
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        full_name:
+          type: string
+          readOnly: true
+        user_id:
+          type: integer
+        department:
+          type: string
+          maxLength: 255
+      required:
+      - full_name
+      - id
+      - user_id
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    TokenVerify:
+      type: object
+      properties:
+        token:
+          type: string
+          writeOnly: true
+      required:
+      - token
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+      required:
+      - email
+      - id
+    UserCreate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - email
+      - id
+      - password
+    UsernameResetConfirm:
+      type: object
+      properties:
+        new_email:
+          type: string
+          format: email
+          title: Email
+          maxLength: 254
+      required:
+      - new_email
+  securitySchemes:
+    jwtAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "JWT"
