@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_filters",
     "django_celery_beat",
+    "drf-spectacular",
     "rest_framework",
     "djoser",
     "debug_toolbar",
