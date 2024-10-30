@@ -17,6 +17,7 @@ redis = "*"
 psycopg2-binary = "*"
 django-celery-beat = "*"
 zoomus = "*"
+drf-spectacular = "*"
 
 [dev-packages]
 
