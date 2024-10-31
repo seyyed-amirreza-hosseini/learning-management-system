@@ -21,6 +21,7 @@ from debug_toolbar.toolbar import debug_toolbar_urls
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
+    path('oauth/', include('drf_social_oauth2.urls', namespace='drf')),
     path('admin/', admin.site.urls),
     path('api/', include('courses.urls')),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
