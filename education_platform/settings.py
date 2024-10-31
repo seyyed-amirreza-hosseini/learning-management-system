@@ -32,24 +32,34 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Django default apps for core functionalities
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    
+    # Third-party packages
     "django_filters",
     "django_celery_beat",
     "drf_spectacular",
     "rest_framework",
     "djoser",
+
+    # OAuth and social authentication
     "oauth2_provider",
     "social_django",
     "drf_social_oauth2",
+
+    # Development and debugging tools
     "debug_toolbar",
+    
+    # Custom apps for project-specific functionality
     "accounts",
     "courses",
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
