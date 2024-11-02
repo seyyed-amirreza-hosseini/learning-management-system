@@ -17,7 +17,6 @@ psycopg2-binary = "*"
 django-celery-beat = "*"
 zoomus = "*"
 drf-spectacular = "*"
-drf-social-oauth2 = "*"
 
 [dev-packages]
 

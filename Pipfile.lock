@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ba8bc01e76d4df711d46679f59b2440b82c494a7a69a9a3f25bd1bba48d9c3de"
+            "sha256": "128aaa672201458daf35ad4c9d88b93d3dbbddf741b26c06d6979a650e647c91"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -364,14 +364,6 @@
             "markers": "python_version >= '3.8'",
             "version": "==24.3"
         },
-        "django-oauth-toolkit": {
-            "hashes": [
-                "sha256:3ef00b062a284f2031b0732b32dc899e3bbf0eac221bbb1cffcb50b8932e55ed",
-                "sha256:7200e4a9fb229b145a6d808cbf0423b6d69a87f68557437733eec3c0cf71db02"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==3.0.1"
-        },
         "django-templated-mail": {
             "hashes": [
                 "sha256:8db807effebb42a532622e2d142dfd453dafcd0d7794c4c3332acb90656315f9",
@@ -423,13 +415,6 @@
             "markers": "python_version >= '3.8'",
             "version": "==0.94.1"
         },
-        "drf-social-oauth2": {
-            "hashes": [
-                "sha256:fbbecd3b960404b167abd06513dcb115262e5595d0794c47bc56f14640da936f"
-            ],
-            "index": "pypi",
-            "version": "==3.1.0"
-        },
         "drf-spectacular": {
             "hashes": [
                 "sha256:a199492f2163c4101055075ebdbb037d59c6e0030692fc83a1a8c0fc65929981",
@@ -470,14 +455,6 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2024.10.1"
-        },
-        "jwcrypto": {
-            "hashes": [
-                "sha256:150d2b0ebbdb8f40b77f543fb44ffd2baeff48788be71f67f03566692fd55789",
-                "sha256:771a87762a0c081ae6166958a954f80848820b2ab066937dc8b8379d65b1b039"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==1.5.6"
         },
         "kombu": {
             "hashes": [
@@ -863,14 +840,6 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==0.5.1"
-        },
-        "typing-extensions": {
-            "hashes": [
-                "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d",
-                "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"
-            ],
-            "markers": "python_version >= '3.8'",
-            "version": "==4.12.2"
         },
         "tzdata": {
             "hashes": [
