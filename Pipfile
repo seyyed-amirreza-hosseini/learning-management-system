@@ -18,6 +18,7 @@ django-celery-beat = "*"
 zoomus = "*"
 drf-spectacular = "*"
 djangorestframework-simplejwt = "*"
+social-auth-app-django = "*"
 
 [dev-packages]
 

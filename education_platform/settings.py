@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "rest_framework",
     "djoser",
-
+    "social_django",
+    
     # Development and debugging tools
     "debug_toolbar",
     
