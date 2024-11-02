@@ -17,6 +17,7 @@ psycopg2-binary = "*"
 django-celery-beat = "*"
 zoomus = "*"
 drf-spectacular = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
