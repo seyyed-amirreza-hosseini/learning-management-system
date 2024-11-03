@@ -28,5 +28,6 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
+    path('accounts/', include('accounts.urls')),
     path('social-auth/', include('social_django.urls'), name='social'),
 ] + debug_toolbar_urls()
