@@ -19,6 +19,7 @@ zoomus = "*"
 drf-spectacular = "*"
 djangorestframework-simplejwt = "*"
 social-auth-app-django = "*"
+django-allauth = "*"
 
 [dev-packages]
 
