@@ -27,7 +27,7 @@ urlpatterns = [
     path('api/schema/docs', SpectacularSwaggerView.as_view(url_name='schema')),
     path('api-auth/', include('rest_framework.urls')),
     path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
-    path('accounts/', include('accounts.urls')),
-    path('social-auth/', include('social_django.urls'), name='social'),
+    path('auth/', include('djoser.urls.authtoken')),
+    path('accounts/', include('allauth.urls')),
+    path('', include('accounts.urls'))
 ] + debug_toolbar_urls()
