@@ -61,7 +61,17 @@ INSTALLED_APPS = [
     "courses",
 ]
 
-SITE_ID = 1
+SITE_ID = 2
+
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email", 
+        ],
+        "AUTH_PARAMS": {"access_type": "online"}
+    }
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -72,6 +82,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 INTERNAL_IPS = [
@@ -162,8 +173,6 @@ SPECTACULAR_SETTINGS = {
 }
 
 DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.auth_token.TokenStrategy',
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.UserCreateSerializer',
         'current_user': 'accounts.serializers.UserSerializer',
@@ -180,20 +189,6 @@ SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
 
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',  # Enable Google backend
-    'django.contrib.auth.backends.ModelBackend', # Regular Django auth
-)
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '16759649139-lofkfh4rbo0thhc1il1mg68sl6e8ukkq.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
-
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
-
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
-
 CELERY_BROKER_URL = 'redis://localhost:6379/1'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
 CELERY_ACCEPT_CONTENT = ['json']
@@ -204,3 +199,17 @@ CELERY_TIMEZONE = 'UTC'
 ZOOM_CLIENT_ID = 'XGLWv9N7SKux02chDQhRig'
 ZOOM_CLIENT_SECRET = 'BS7BW14zocdtMDo08B4ZMs4myq5I1vwW'
 ZOOM_ACCOUNT_ID = 'iWfjvbo_QBCsplH3EPMO5A'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+# Use email as the username field
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
