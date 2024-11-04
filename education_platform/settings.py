@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     
     # Third-party packages
     "django_filters",
@@ -47,7 +48,11 @@ INSTALLED_APPS = [
     "rest_framework",
     "djoser",
     "social_django",
-    
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+
     # Development and debugging tools
     "debug_toolbar",
     
